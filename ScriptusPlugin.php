@@ -2,11 +2,12 @@
 
 class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
 {
-    protected $_hooks = array('install', 
-                              'uninstall', 
+    protected $_hooks = array(//'install', 
+                              //'uninstall', 
                               'define_routes'
                               );    
   
+    /*
     public function hookInstall()
     {
         $db = $this->_db;
@@ -26,7 +27,7 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
         $sql = "DROP TABLE IF EXISTS `$db->Scriptus`; ";
         $db->query($sql);
     }
-
+    */
     
     public function hookDefineRoutes($array)
     {        
@@ -34,7 +35,7 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
         $router->addRoute(
             'transcribe',
             new Zend_Controller_Router_Route(
-                'items/transcribe/:id/',
+                'transcribe/:item/:file',
                 array(
                     'module'       => 'scriptus',
                     'controller'   => 'index',
