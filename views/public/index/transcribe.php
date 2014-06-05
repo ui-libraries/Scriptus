@@ -23,13 +23,15 @@
 </style>
 
 
-<link href="../../plugins/Scriptus/views/public/css/PumaSideBar.min.css" rel="stylesheet">
-
 <?php 
 	echo js_tag('jquery-1.9.1'); 
 	echo js_tag('jquery.smoothZoom.min'); 
 	echo js_tag('PumaSideBar.min');
 ?>
+
+<link href="../../plugins/Scriptus/views/public/css/font-awesome.min.css" rel="stylesheet">
+<link href="../../plugins/Scriptus/views/public/css/PumaSideBar.min.css" rel="stylesheet">
+
 
 <script>
 	jQuery(function($){
@@ -49,7 +51,7 @@
 			label: "DIYH Transcription", // Initial label
 			closeoutside: false,
 			movebody: true, // if you want to push or not your page
-			avatar: "http://s-lib018.lib.uiowa.edu/omeka/themes/diyh/images/mbutler.jpeg", // Initial avatar.
+			avatar: "http://s-lib018.lib.uiowa.edu/omeka/themes/diyh/images/mbutler.png", // Initial avatar.
 			items: [{
 						fa: "fa-text", 
 						text: "Text Box"    
