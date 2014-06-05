@@ -23,9 +23,12 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         //echo '<img src="/omeka2/files/original/'.$filename.'"">';
         set_current_record('item', $item);       
 
-        echo '<body><div id="lab"></div>';
-        echo '<img id="ImageID" src="'.$imageUrl.'"/>';
-        echo '</body></html>';
+        echo'   <body>
+                    <div id="lab"></div>
+                    <img id="ImageID" src="'.$imageUrl.'"/>
+                </body>
+                </html>
+            ';
 
         
 

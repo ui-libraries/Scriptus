@@ -22,8 +22,15 @@
 	}
 </style>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<?php echo js_tag('jquery.smoothZoom.min'); ?>
+
+<link href="../../plugins/Scriptus/views/public/css/PumaSideBar.min.css" rel="stylesheet">
+
+<?php 
+	echo js_tag('jquery-1.9.1'); 
+	echo js_tag('jquery.smoothZoom.min'); 
+	echo js_tag('PumaSideBar.min');
+?>
+
 <script>
 	jQuery(function($){
 		$('#ImageID').smoothZoom({
@@ -33,5 +40,26 @@
 		});
 	});
 </script>
+
+<script>
+	$(document).ready(function(){
+
+		$.PumaSideBar({
+			position: "right",  // Position
+			label: "DIYH Transcription", // Initial label
+			closeoutside: false,
+			movebody: true, // if you want to push or not your page
+			avatar: "http://s-lib018.lib.uiowa.edu/omeka/themes/diyh/images/mbutler.jpeg", // Initial avatar.
+			items: [{
+						fa: "fa-text", 
+						text: "Text Box"    
+					
+					}]
+		});
+
+
+	});
+</script>
  
 </head>
+
