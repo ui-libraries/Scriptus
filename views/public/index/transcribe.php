@@ -25,43 +25,48 @@
 
 <?php 
 	echo js_tag('jquery-1.9.1'); 
-	echo js_tag('jquery.smoothZoom.min'); 
-	echo js_tag('PumaSideBar.min');
+	echo js_tag('jquery.smoothZoom'); 	
+	echo js_tag('modernizr.custom');
 ?>
-
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 <link href="../../plugins/Scriptus/views/public/css/font-awesome.min.css" rel="stylesheet">
-<link href="../../plugins/Scriptus/views/public/css/PumaSideBar.min.css" rel="stylesheet">
+<link href="../../plugins/Scriptus/views/public/css/component.css" rel="stylesheet">
 
-
-<script>
-	jQuery(function($){
-		$('#ImageID').smoothZoom({
-			width: '100%',
-			height: '100%',
-			responsive: true
-		});
-	});
-</script>
-
-<script>
-	$(document).ready(function(){
-
-		$.PumaSideBar({
-			position: "right",  // Position
-			label: "DIYH Transcription", // Initial label
-			closeoutside: false,
-			movebody: true, // if you want to push or not your page
-			avatar: "http://s-lib018.lib.uiowa.edu/omeka/themes/diyh/images/mbutler.png", // Initial avatar.
-			items: [{
-						fa: "fa-text", 
-						text: "Text Box"    
-					
-					}]
-		});
-
-
-	});
-</script>
  
 </head>
+
+	<body class="cbp-spmenu-push">
+
+		<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
+			<h3>Transcription</h3>
+			<textarea id="transcribe-box" class="form-control" rows="25"></textarea>
+		</nav>
+
+		<img id="ImageID" src=""/>
+
+		<!-- Classie - class helper functions by @desandro https://github.com/desandro/classie -->
+		<script src="../../plugins/Scriptus/views/public/javascripts/classie.js"></script>
+		<script>
+			var 
+				menuRight = document.getElementById( 'cbp-spmenu-s2' ),							
+				body = document.body;
+
+			window.onload = function() {				
+				classie.toggle( body, 'cbp-spmenu-push-toleft' );
+				classie.toggle( menuRight, 'cbp-spmenu-open' );			
+			};
+		</script>
+
+		<script>
+			jQuery(function($){
+				$('#ImageID').smoothZoom({
+					width: '100%',
+					height: '100%',
+					responsive: true
+				});
+			});
+		</script>
+
+	</body>
+</html>
 
