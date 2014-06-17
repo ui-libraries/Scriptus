@@ -42,6 +42,18 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
                     'action'       => 'transcribe',
                 )
             )
+        );
+
+        $router->addRoute(
+            'save',
+            new Zend_Controller_Router_Route(
+                'transcribe/:item/:file/save',
+                array(
+                    'module'       => 'scriptus',
+                    'controller'   => 'index',
+                    'action'       => 'save',
+                )
+            )
         );     
         
     }

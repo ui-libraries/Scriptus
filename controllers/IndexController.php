@@ -33,14 +33,36 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
            $filename = $file['filename'];      
            set_current_record('file', $file);   
            $imageUrl = $file->getWebPath('original');
-           $transcription = metadata($file, array('Scripto', 'Transcription')); 
+           $transcription = metadata($file, array('Scriptus', 'Transcription'));          
+           $transcription = preg_replace('#[^0-9a-z .,\'"-/]#i', '', $transcription);  
+                      
         }         
 
         //set js variable for image URL
         echo '  <script>
                     $("#transcribe-box").append("'.$transcription.'");
-                    $("#ImageID").attr("src","'.$imageUrl.'");
+                    $("#ImageID").attr("src","'.$imageUrl.'");                    
                 </script>'; 
+    }
+
+     public function saveAction() 
+     {        
+
+        $itemId = $this->getParam('item');
+        $fileId = $this->getParam('file');
+        
+        $transcription = $_POST["transcription"];
+        $file = get_record_by_id("file", $fileId);
+
+        $data = array('Scriptus' => array('Transcription' => array(array('text' => $transcription, 'html' => false))));
+        
+        $file->addElementTextsByArray($data);
+        
+        //Replace text, not append
+        $file->setReplaceElementTexts();
+        
+        //Save text
+        $file->saveElementTexts();        
     }
     
 
