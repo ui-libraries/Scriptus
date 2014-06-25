@@ -39,10 +39,7 @@
 
 		<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
 			<h3>Transcription</h3>
-			<form id="transcribe-form" action="<?php echo Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(); ?>/save" method="post">
-				<textarea id="transcribe-box" name="transcription" class="form-control" rows="25"></textarea>
-				 <button type="submit" class="btn btn-default">Submit</button>
-			</form>		
+			<?php echo $this->form; ?>	
 			
 		</nav>
 
@@ -76,7 +73,7 @@
 
 				// get the form data				
 				var formData = {
-					'transcription'	: $('#transcribe-box').val()
+					'transcription'	: $('#transcribebox').val()
 				};
 
 				// process the form
@@ -91,7 +88,7 @@
 					.done(function(data) {
 
 						// log data to the console so we can see
-						console.log(data); 
+						//console.log(data); 
 
 						// here we will handle errors and validation messages
 					});
@@ -99,7 +96,7 @@
 				// stop the form from submitting the normal way and refreshing the page
 				event.preventDefault();
 			});
-		</script>
+		</script>		
 
 	</body>
 </html>

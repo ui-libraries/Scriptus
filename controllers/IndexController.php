@@ -33,14 +33,30 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
            $filename = $file['filename'];      
            set_current_record('file', $file);   
            $imageUrl = $file->getWebPath('original');
-           $transcription = metadata($file, array('Scriptus', 'Transcription'));          
-           $transcription = preg_replace('#[^0-9a-z .,\'"-/]#i', '', $transcription);  
-                      
-        }         
+           $transcription = metadata($file, array('Scriptus', 'Transcription'));
+
+        }   
+
+        $form = new Omeka_Form;         
+        $form->setMethod('post');
+
+        $transcriptionArea = new Zend_Form_Element_Textarea('transcribebox');  
+
+        $transcriptionArea  ->setRequired(true)       
+                            ->setValue($transcription)
+                            ->setAttrib('cols', 35)
+                            ->setAttrib('rows', 25);
+
+        $form->addElement($transcriptionArea);
+
+        $save = new Zend_Form_Element_Submit('save');
+        $save ->setLabel('Save');
+        $form->addElement($save);
+
+        $this->view->form = $form;      
 
         //set js variable for image URL
-        echo '  <script>
-                    $("#transcribe-box").append("'.$transcription.'");
+        echo '  <script>                    
                     $("#ImageID").attr("src","'.$imageUrl.'");                    
                 </script>'; 
     }
