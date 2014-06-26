@@ -52,7 +52,7 @@
 		button_BG_TRANSPARENCY: 55,					//Background transparency (in percentage)
 		button_AUTO_HIDE: false,					//To hide the button set when mouse moved outside the view area
 		button_AUTO_HIDE_DELAY: 1,					//Auto hide delay time in seconds
-		button_ALIGN: 'bottom right',				//Button set can be aligned to any side or center
+		button_ALIGN: 'left bottom',					//Button set can be aligned to any side or center
 		button_MARGIN: 10,							//Space between button set and view port's edge
 		button_ROUND_CORNERS: true,					//To enable disable roundness of button corner
 		
@@ -62,7 +62,7 @@
 		mouse_WHEEL_CURSOR_POS: true,				//Enable/disable position sensitive mousewheel zoom
 		mouse_DOUBLE_CLICK: true,					//Enable/disable zoom action with double click
 
-		background_COLOR: '#FFFFFF',				//Background colour of image container
+		background_COLOR: '#000000',				//Background colour of image container
 		border_SIZE: 1,								//Border size of view area
 		border_COLOR: '#000000',					//Border color of view area
 		border_TRANSPARENCY: 10,					//Border transparency of view area
@@ -564,6 +564,9 @@
 				hProp = 'left';
 				hVal = bu_margin;
 			}
+
+			//offset for right sidebar. comment out if sidebar is removed. see line 120 in component.css
+			hVal = 150;
 
 			//Buttons Container		
 			$controls = $(
