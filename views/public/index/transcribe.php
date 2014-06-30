@@ -38,8 +38,8 @@
 
 		<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
 			
-   			<?php echo "<h1>" . $this->dc_file_title . "<br /><small>" . $this->dc_item_title . "</small></h1>"; ?>
-   			<?php echo "<h5>".$this->collection_link."</h5>"; ?>
+   			<?php echo "<h2>" . $this->dc_file_title . "</h2>" . $this->dc_item_link; ?>
+   			<?php echo "<h5>" . $this->collection_link . "</h5>"; ?>
 			<?php echo $this->form; ?>	
 			
 		</nav>

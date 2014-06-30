@@ -34,11 +34,11 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
            set_current_record('item', $item);   
            $imageUrl = $file->getWebPath('original');
            $transcription = metadata($file, array('Scriptus', 'Transcription'));
-           $dc_item_title = metadata($item, array('Dublin Core', 'Title') );
-           $dc_file_title = metadata($file, array('Dublin Core', 'Title') ); 
-           $collection_link = link_to_collection_for_item(); 
-           $this->view->dc_file_title = $dc_file_title; 
-           $this->view->dc_item_title = $dc_item_title;  
+           $dc_file_title = metadata($file, array('Dublin Core', 'Title') );
+           $dc_item_link = link_to($item, 'show', metadata($item, array('Dublin Core', 'Title') )); 
+           $collection_link = link_to_collection_for_item();            
+           $this->view->dc_file_title = $dc_file_title;            
+           $this->view->dc_item_link = $dc_item_link;
            $this->view->collection_link = $collection_link;       
 
         }   
