@@ -29,12 +29,11 @@
 	echo js_tag('modernizr.custom');
 ?>
 
-<link href="../../plugins/Scriptus/views/public/css/font-awesome.min.css" rel="stylesheet">
-<link href="../../plugins/Scriptus/views/public/css/component.css" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-hover-dropdown/2.0.10/bootstrap-hover-dropdown.min.js"></script>
+<link href="../../plugins/Scriptus/views/public/css/component.css" rel="stylesheet">
  
 </head>
 
@@ -42,13 +41,17 @@
 
 		<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
 			
-   			<?php echo "<h2>" . $this->dc_file_title . "</h2>
-   			item: " . $this->dc_item_link .
-   			"<h5>collection: " . $this->collection_link . "</h5>"; ?>
+	   		<a href="http://s-lib018.lib.uiowa.edu/omeka" alt="Home"><span class="glyphicon glyphicon-home"></span>home</a>
+	   		<br /><br />
+	   		<ul>
+	   			<li><?php echo '<p><span class="fa fa-file-text fa-lg"></span><strong>' . $this->dc_file_title . '</strong></p>'; ?></li>
+	   			<li><?php echo '<p><span class="fa fa-book fa-lg"></span>' . $this->dc_item_link . "</p>"; ?></li>
+	   			<li><?php echo '<p><span class="fa fa-archive fa-lg"></span>' . $this->collection_link . "</p>"; ?></li>
+   			</ul>
 
    			<div class="dropdown">
-   				<a href="#" id="drop2" role="button" class="dropdown-toggle" data-toggle="dropdown">More information<span class="caret"></span></a>
-   			    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+   				<a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">More information<span class="caret"></span></a>
+   			    <ul class="dropdown-menu" role="menu">
    			      <li><a href="<?php echo $this->idl_link; ?>">digital collection</a></li>
    			      <li><a href="<?php echo $this->collguide_link; ?>">archival collection guide</a></li>
    			    </ul>

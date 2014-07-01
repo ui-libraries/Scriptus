@@ -9,10 +9,30 @@
 }
 
 .cbp-spmenu a {
-	color: gray;
+	color: #6E6E6E;
+	
+}
+
+.cbp-spmenu .dropdown a {
+	color: #993300;
+}
+
+.cbp-spmenu ul {
+	list-style: none;
+	padding-left: 0;
+}
+
+.cbp-spmenu ul li {
 	font-size: large;
 }
 
+.cbp-spmenu .fa {
+	padding-right: 10px;
+}
+
+.cbp-spmenu .glyphicon {
+	padding-right: 10px;
+}
 
 /* Orientation-dependent styles for the content of the menu */
 
