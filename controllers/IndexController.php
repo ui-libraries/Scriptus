@@ -36,10 +36,14 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
            $transcription = metadata($file, array('Scriptus', 'Transcription'));
            $dc_file_title = metadata($file, array('Dublin Core', 'Title') );
            $dc_item_link = link_to($item, 'show', metadata($item, array('Dublin Core', 'Title') )); 
+           $idl_link = metadata($file, array('Dublin Core', 'Source'));
+           $collguide_link = metadata($item, array('Dublin Core', 'Relation'));
            $collection_link = link_to_collection_for_item();            
            $this->view->dc_file_title = $dc_file_title;            
            $this->view->dc_item_link = $dc_item_link;
-           $this->view->collection_link = $collection_link;       
+           $this->view->collection_link = $collection_link; 
+           $this->view->idl_link = $idl_link; 
+           $this->view->collguide_link = $collguide_link; 
 
         }   
 
@@ -54,18 +58,20 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
                             ->setAttrib('rows', 25)
                             ->setAttrib('class', 'col-xs-12')
                             ->setAttrib('class', 'form-control');
-
-        $title = new Zend_Form_Element_Text('title');
-        $title      ->setAttrib('readonly', 'true')
-                    ->setAttrib('disabled', 'true');
-
-        $title->setValue($dc_file_title);        
+       
         $form->addElement($transcriptionArea);
 
         $save = new Zend_Form_Element_Submit('save');
         $save ->setLabel('Save');
         $save->setAttrib('class', 'btn btn-primary');
+        $save->setAttrib('data-loading-text', "Saving...");
+        $save->setAttrib('id', 'save-button');
         $form->addElement($save);
+
+        //$info = new Zend_Form_Element_Button('info');
+        //$info   ->setLabel('More information on this item');
+        //$info   ->setAttrib('class', 'btn btn-info');
+        //$form   ->addElement($info);
 
         $this->view->form = $form;      
 

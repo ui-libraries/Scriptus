@@ -28,9 +28,13 @@
 	echo js_tag('jquery.smoothZoom'); 	
 	echo js_tag('modernizr.custom');
 ?>
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
 <link href="../../plugins/Scriptus/views/public/css/font-awesome.min.css" rel="stylesheet">
 <link href="../../plugins/Scriptus/views/public/css/component.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-hover-dropdown/2.0.10/bootstrap-hover-dropdown.min.js"></script>
  
 </head>
 
@@ -38,11 +42,20 @@
 
 		<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
 			
-   			<?php echo "<h2>" . $this->dc_file_title . "</h2>" . $this->dc_item_link; ?>
-   			<?php echo "<h5>" . $this->collection_link . "</h5>"; ?>
-			<?php echo $this->form; ?>	
-			
+   			<?php echo "<h2>" . $this->dc_file_title . "</h2>
+   			item: " . $this->dc_item_link .
+   			"<h5>collection: " . $this->collection_link . "</h5>"; ?>
+
+   			<div class="dropdown">
+   				<a href="#" id="drop2" role="button" class="dropdown-toggle" data-toggle="dropdown">More information<span class="caret"></span></a>
+   			    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+   			      <li><a href="<?php echo $this->idl_link; ?>">digital collection</a></li>
+   			      <li><a href="<?php echo $this->collguide_link; ?>">archival collection guide</a></li>
+   			    </ul>
+   			</div>   			
+			<?php echo $this->form; ?>
 		</nav>
+
 
 		<img id="ImageID" src=""/>
 
@@ -68,6 +81,8 @@
 				});				
 			});
 		</script>
+
+
 
 		<script>
 		$('form').submit(function(event) {
@@ -97,7 +112,34 @@
 				// stop the form from submitting the normal way and refreshing the page
 				event.preventDefault();
 			});
-		</script>		
+		</script>	
+
+		<script>
+		/* simulates async login activity */
+		var doLogin = function(ms,cb) {
+		  setTimeout(function() {
+		    if(typeof cb == 'function')
+		    cb();
+		  }, ms);
+		};
+
+		$('#save-button').click(function(){
+		  var btn = $(this);
+		  
+		  btn.button("loading");
+		  btn.children().each(function(idx,ele){
+		    var icon = $(ele);
+		    icon.animate({},2000, 'linear', function() {
+		        icon.hide().fadeIn(300*idx).addClass('big');
+		     });
+		  });
+		  
+		  // perform login / async callback here
+		  doLogin(3000,function(){
+		  	btn.button("reset"); // reset button after login callback returns
+		  });	  
+		})
+		</script>
 
 	</body>
 </html>

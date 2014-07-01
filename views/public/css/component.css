@@ -8,6 +8,11 @@
     border-color: #BDBDBD;
 }
 
+.cbp-spmenu a {
+	color: gray;
+	font-size: large;
+}
+
 
 /* Orientation-dependent styles for the content of the menu */
 
