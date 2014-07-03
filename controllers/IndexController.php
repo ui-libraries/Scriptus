@@ -84,24 +84,17 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
      public function saveAction() 
      {        
 
-        $itemId = $this->getParam('item');
         $fileId = $this->getParam('file');
-        
-        $transcription = $_POST["transcription"];
         $file = get_record_by_id("file", $fileId);
-
-        $scriptus_elements = array('Scriptus' => array('Transcription' => array(array('text' => $transcription, 'html' => false))));
-        $dc_elements = array('Dublin Core');
         
-        //add the two element sets we need
-        $file->addElementTextsByArray($scriptus_elements);
-        $file->addElementTextsByArray($dc_elements);
+        $request = new Zend_Controller_Request_Http();
+        $transcription = $request->getPost('transcription');        
 
-        //Replace text, not append
-        $file->setReplaceElementTexts();
-
-        //Save text
-        $file->saveElementTexts();        
+        $element = $file->getElement('Scriptus', 'Transcription');
+        $file->deleteElementTextsByElementId(array($element->id));
+        $file->addTextForElement($element, $transcription, false);
+    
+        $file->save();    
     }
     
 
