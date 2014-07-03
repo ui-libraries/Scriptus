@@ -29,16 +29,22 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
             throw new Zend_Controller_Action_Exception('This page does not exist', 404);             
 
         } else {
+            
+           set_current_record('item', $item); 
 
-           $filename = $file['filename'];      
-           set_current_record('item', $item);   
-           $imageUrl = $file->getWebPath('original');
+           //get the path to the file image  
+           $imageUrl = $file->getWebPath('original');           
+
+           //get the relevant metadata
            $transcription = metadata($file, array('Scriptus', 'Transcription'));
            $dc_file_title = metadata($file, array('Dublin Core', 'Title') );
            $dc_item_link = link_to($item, 'show', metadata($item, array('Dublin Core', 'Title') )); 
            $idl_link = metadata($file, array('Dublin Core', 'Source'));
            $collguide_link = metadata($item, array('Dublin Core', 'Relation'));
-           $collection_link = link_to_collection_for_item();            
+           $collection_link = link_to_collection_for_item();
+
+           //send everything to the view
+           $this->view->imageUrl = $imageUrl;            
            $this->view->dc_file_title = $dc_file_title;            
            $this->view->dc_item_link = $dc_item_link;
            $this->view->collection_link = $collection_link; 
@@ -47,6 +53,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         }   
 
+        //create a new Omeka form
         $form = new Omeka_Form;         
         $form->setMethod('post'); 
 
@@ -68,28 +75,21 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $save->setAttrib('id', 'save-button');
         $form->addElement($save);
 
-        //$info = new Zend_Form_Element_Button('info');
-        //$info   ->setLabel('More information on this item');
-        //$info   ->setAttrib('class', 'btn btn-info');
-        //$form   ->addElement($info);
-
-        $this->view->form = $form;      
-
-        //set js variable for image URL
-        echo '  <script>                    
-                    $("#ImageID").attr("src","'.$imageUrl.'");                    
-                </script>'; 
+        $this->view->form = $form;         
     }
 
      public function saveAction() 
      {        
 
+        //get the record based on URL param
         $fileId = $this->getParam('file');
         $file = get_record_by_id("file", $fileId);
-        
+
+        //get the posted transcription data       
         $request = new Zend_Controller_Request_Http();
         $transcription = $request->getPost('transcription');        
 
+        //save the new transcription data
         $element = $file->getElement('Scriptus', 'Transcription');
         $file->deleteElementTextsByElementId(array($element->id));
         $file->addTextForElement($element, $transcription, false);

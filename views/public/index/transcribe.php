@@ -37,7 +37,9 @@
  
 </head>
 
-	<body class="cbp-spmenu-push">		
+	<body class="cbp-spmenu-push">	
+
+		<img id="ImageID" src="<?php echo $this->imageUrl; ?>"/>	
 
 		<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
 			
@@ -57,10 +59,8 @@
    			    </ul>
    			</div>   			
 			<?php echo $this->form; ?>
-		</nav>
+		</nav>	
 
-
-		<img id="ImageID" src=""/>
 
 		<!-- Classie - class helper functions by @desandro https://github.com/desandro/classie -->
 		<script src="../../plugins/Scriptus/views/public/javascripts/classie.js"></script>
