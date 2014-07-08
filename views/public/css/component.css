@@ -1,3 +1,22 @@
+
+html {		
+	height: 100%;	
+}
+	
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0px;		
+}
+
+.smooth_zoom_preloader {
+	background-image: url(../index/img/preloader.gif);
+}	
+.smooth_zoom_icons {
+	background-image: url(../index/img/icons.png);
+}
+
+
 /* General styles for all menus */
 .cbp-spmenu {
 	background: #F2F2F2;
