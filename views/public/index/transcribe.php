@@ -16,7 +16,19 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-hover-dropdown/2.0.10/bootstrap-hover-dropdown.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/tab.js"></script>
 <link href="../../plugins/Scriptus/views/public/css/component.css" rel="stylesheet"> 
+<script>
+$('#transcription').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+
+$('#discuss').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+</script>
 </head>
 
 	<body class="cbp-spmenu-push">	
@@ -27,20 +39,40 @@
 			
 	   		<a href="<?php echo WEB_ROOT; ?>" alt="Home"><span class="glyphicon glyphicon-home"></span>home</a>
 	   		<br /><br />
-	   		<ul>
-	   			<li><p><span class="fa fa-file-text fa-lg"></span><strong><?php echo $this->dc_file_title; ?> </strong></p></li>
-	   			<li><p><span class="fa fa-book fa-lg"></span><?php echo $this->dc_item_link; ?> </p></li>
-	   			<li><p><span class="fa fa-archive fa-lg"></span><?php echo $this->collection_link; ?> </p></li>
-   			</ul>
 
-   			<div class="dropdown">
-   				<a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">More information<span class="caret"></span></a>
-   			    <ul class="dropdown-menu" role="menu">
-   			      <li><a href="<?php echo $this->idl_link; ?>">digital collection</a></li>
-   			      <li><a href="<?php echo $this->collguide_link; ?>">archival collection guide</a></li>
-   			    </ul>
-   			</div>   			
-			<?php echo $this->form; ?>
+	   		<ul class="nav nav-tabs" role="tablist">
+	   		  <li class="active"><a href="#transcribe" role="tab" data-toggle="tab">Transcribe</a></li>
+	   		  <li><a href="#discuss" role="tab" data-toggle="tab">Discuss</a></li>
+	   		</ul>
+
+	   		<div class="tab-content">
+
+		   		<div data-toggle="tab" class="tab-pane active" id="transcribe">
+			   		<ul>
+			   			<li><p><span class="fa fa-file-text fa-lg"></span><strong><?php echo $this->dc_file_title; ?> </strong></p></li>
+			   			<li><?php echo $this->testers; ?></li>
+			   			<li><p><span class="fa fa-book fa-lg"></span><?php echo $this->dc_item_link; ?> </p></li>
+			   			<li><p><span class="fa fa-archive fa-lg"></span><?php echo $this->collection_link; ?> </p></li>
+		   			</ul>
+
+		   			<div class="dropdown">
+		   				<a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">More information<span class="caret"></span></a>
+		   			    <ul class="dropdown-menu" role="menu">
+		   			      <li><a href="<?php echo $this->idl_link; ?>">digital collection</a></li>
+		   			      <li><a href="<?php echo $this->collguide_link; ?>">archival collection guide</a></li>
+		   			    </ul>
+		   			</div>   			
+					<?php echo $this->form; 				
+					?>
+				</div>
+
+				<div data-toggle="tab" class="tab-pane" id="discuss">
+					<strong>Chat System</strong><br />
+					Matt: What does this say? <br />
+					Jen: I can't read it.
+				</div>
+
+			</div>
 		</nav>	
 
 
