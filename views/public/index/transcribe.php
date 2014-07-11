@@ -16,19 +16,9 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-hover-dropdown/2.0.10/bootstrap-hover-dropdown.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/tab.js"></script>
-<link href="../../plugins/Scriptus/views/public/css/component.css" rel="stylesheet"> 
-<script>
-$('#transcription').click(function (e) {
-  e.preventDefault()
-  $(this).tab('show')
-})
 
-$('#discuss').click(function (e) {
-  e.preventDefault()
-  $(this).tab('show')
-})
-</script>
+<link href="../../plugins/Scriptus/views/public/css/component.css" rel="stylesheet"> 
+
 </head>
 
 	<body class="cbp-spmenu-push">	
@@ -47,11 +37,10 @@ $('#discuss').click(function (e) {
 
 	   		<div class="tab-content">
 
-		   		<div data-toggle="tab" class="tab-pane active" id="transcribe">
+		   		<div class="tab-pane active" id="transcribe">
 			   		<ul>
-			   			<li><p><span class="fa fa-file-text fa-lg"></span><strong><?php echo $this->dc_file_title; ?> </strong></p></li>
-			   			<li><?php echo $this->testers; ?></li>
-			   			<li><p><span class="fa fa-book fa-lg"></span><?php echo $this->dc_item_link; ?> </p></li>
+			   			<li><p><span class="fa fa-file-text fa-lg"></span><strong><?php echo $this->file_title; ?> </strong></p></li>
+			   			<li><p><span class="fa fa-book fa-lg"></span><?php echo $this->item_link; ?> </p></li>
 			   			<li><p><span class="fa fa-archive fa-lg"></span><?php echo $this->collection_link; ?> </p></li>
 		   			</ul>
 
@@ -67,9 +56,21 @@ $('#discuss').click(function (e) {
 				</div>
 
 				<div data-toggle="tab" class="tab-pane" id="discuss">
-					<strong>Chat System</strong><br />
-					Matt: What does this say? <br />
-					Jen: I can't read it.
+					<div id="disqus_thread"></div>
+					<script type="text/javascript">
+					    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+					    var disqus_shortname = 'diyh'; // required: replace example with your forum shortname
+
+					    /* * * DON'T EDIT BELOW THIS LINE * * */
+					    (function() {
+					        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+					        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+					        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+					    })();
+					</script>
+					<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+					<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+					
 				</div>
 
 			</div>
