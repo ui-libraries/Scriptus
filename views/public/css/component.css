@@ -185,3 +185,7 @@ body {
 .nav-tabs {
 	margin-bottom: 10px;
 }
+
+#save-button {
+	margin-bottom: 10px;
+}

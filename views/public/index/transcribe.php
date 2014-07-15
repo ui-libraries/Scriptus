@@ -53,6 +53,19 @@
 		   			</div>   			
 					<?php echo $this->form; 				
 					?>
+
+					<?php if (isset($this->paginationUrls['prev'])): ?>
+						<a><button type="submit" class="btn btn-xs" onClick="parent.location='<?php echo html_escape($this->paginationUrls['prev']); ?>'">prev</button></a>
+					<?php else: ?>
+						<button type="submit" class="btn btn-xs">prev</button>
+					<?php endif; ?>
+
+					<?php if (isset($this->paginationUrls['next'])): ?>
+						<a><button type="submit" class="btn btn-xs" onClick="parent.location='<?php echo html_escape($this->paginationUrls['next']); ?>'">next</button></a>
+					<?php else: ?>
+						<button type="submit" class="btn btn-xs">next</button>
+					<?php endif; ?>
+
 				</div>
 
 				<div data-toggle="tab" class="tab-pane" id="discuss">

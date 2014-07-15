@@ -2,13 +2,13 @@
 
 class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 {
-    /*    
+        
     public function init()
     {        
         
         $this->_helper->db->setDefaultModelName('Scriptus');
     }
-    */
+    
     
     public function transcribeAction()
     {
@@ -38,7 +38,29 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $this->view->idl_link = $scriptus->getIdlLink(); 
         $this->view->collguide_link = $scriptus->getCollguideLink();           
 
-        $this->view->form = $scriptus->buildForm();    
+        $this->view->form = $scriptus->buildForm();   
+
+        $paginationUrls = array();  
+        $files = get_records('file', array('item_id'=>$itemId), 999);
+
+            foreach ($files as $file) {
+                
+                $fileID = $file->id;
+
+                if (isset($current)) {
+                    $paginationUrls['next'] = WEB_ROOT . '/transcribe/' . $itemId . '/' . $fileID;
+                    break;
+                }
+
+                if ($fileID == $fileId) {
+                    $current = true;
+                } else {
+                    $paginationUrls['prev'] = WEB_ROOT . '/transcribe/' . $itemId . '/' . $fileID;
+                }
+
+            }
+            
+        $this->view->paginationUrls = $paginationUrls; 
 
     }
 
