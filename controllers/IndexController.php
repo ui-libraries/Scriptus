@@ -11,9 +11,6 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         $scriptus = new Scriptus($itemId, $fileId);
 
-        $item = $scriptus->getItem();        
-        $file = $scriptus->getFile(); 
-
         $this->transcription = $scriptus->getTranscription(); 
 
         $this->view->imageUrl = $scriptus->getImageUrl();                           
