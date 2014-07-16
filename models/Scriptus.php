@@ -1,31 +1,13 @@
 <?php
 
 
-class Scriptus extends Omeka_Record_AbstractRecord
+class Scriptus 
 {
-    private $item;
-    private $file;
-    private $imageUrl;
-    private $transcription;
-    private $file_title;
-    private $item_link;
-    private $idl_link;
-    private $collguide_link;
-    private $collection_link;
-    private $form;
 
     public function __construct($itemId, $fileId) {
         $this->item = get_record_by_id('item', $itemId);
         $this->file = get_record_by_id('file', $fileId);
-        $this->_isValid($this->item, $this->file, $itemId);
-        set_current_record('item', $this->item);
-        $this->imageUrl = $this->file->getWebPath('original');
-        $this->transcription = metadata($this->file, array('Scriptus', 'Transcription'));
-        $this->file_title = metadata($this->file, array('Dublin Core', 'Title') );
-        $this->item_link = link_to($this->item, 'show', metadata($this->item, array('Dublin Core', 'Title') )); 
-        $this->idl_link = metadata($this->file, array('Dublin Core', 'Source'));
-        $this->collguide_link = metadata($this->item, array('Dublin Core', 'Relation'));
-        $this->collection_link = link_to_collection_for_item();
+        $this->_isValid($this->item, $this->file, $itemId);  
     }
 
     public function getItem() {
@@ -37,30 +19,38 @@ class Scriptus extends Omeka_Record_AbstractRecord
     }
 
     public function getImageUrl() {
+        $this->imageUrl = $this->file->getWebPath('original');
     	return $this->imageUrl;
     }
 
     public function getTranscription() {
+        $this->transcription = metadata($this->file, array('Scriptus', 'Transcription'));
     	return $this->transcription;
     }
 
     public function getFileTitle() {
+        $this->file_title = metadata($this->file, array('Dublin Core', 'Title'));
     	return $this->file_title;
     }
 
     public function getItemLink() {
+        $this->item_link = link_to($this->item, 'show', metadata($this->item, array('Dublin Core', 'Title'))); 
     	return $this->item_link;
     }
 
     public function getIdlLink() {
+        $this->idl_link = metadata($this->file, array('Dublin Core', 'Source'));
     	return $this->idl_link;
     }
 
     public function getCollguideLink() {
+        $this->collguide_link = metadata($this->item, array('Dublin Core', 'Relation'));        
     	return $this->collguide_link;
     }
 
     public function getCollectionLink() {
+        set_current_record('item', $this->item);
+        $this->collection_link = link_to_collection_for_item();
     	return $this->collection_link;
     }
 
