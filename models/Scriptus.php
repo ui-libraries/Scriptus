@@ -3,20 +3,29 @@
 
 class Scriptus extends Omeka_Record_AbstractRecord
 {
-    public $item;
-    public $file;
-    public $imageUrl;
-    public $transcription;
-    public $file_title;
-    public $item_link;
-    public $idl_link;
-    public $collguide_link;
-    public $collection_link;
-    public $form;
+    private $item;
+    private $file;
+    private $imageUrl;
+    private $transcription;
+    private $file_title;
+    private $item_link;
+    private $idl_link;
+    private $collguide_link;
+    private $collection_link;
+    private $form;
 
-    public function setRecords($itemId, $fileId) {
-    	$this->item = get_record_by_id('item', $itemId);
-    	$this->file = get_record_by_id('file', $fileId);    	
+    public function __construct($itemId, $fileId) {
+        $this->item = get_record_by_id('item', $itemId);
+        $this->file = get_record_by_id('file', $fileId);
+        $this->_isValid($this->item, $this->file, $itemId);
+        set_current_record('item', $this->item);
+        $this->imageUrl = $this->file->getWebPath('original');
+        $this->transcription = metadata($this->file, array('Scriptus', 'Transcription'));
+        $this->file_title = metadata($this->file, array('Dublin Core', 'Title') );
+        $this->item_link = link_to($this->item, 'show', metadata($this->item, array('Dublin Core', 'Title') )); 
+        $this->idl_link = metadata($this->file, array('Dublin Core', 'Source'));
+        $this->collguide_link = metadata($this->item, array('Dublin Core', 'Relation'));
+        $this->collection_link = link_to_collection_for_item();
     }
 
     public function getItem() {
@@ -25,16 +34,6 @@ class Scriptus extends Omeka_Record_AbstractRecord
 
     public function getFile() {
     	return $this->file;
-    }
-
-    public function setMetadata($item, $file) {
-    	$this->imageUrl = $file->getWebPath('original');
-    	$this->transcription = metadata($file, array('Scriptus', 'Transcription'));
-    	$this->file_title = metadata($file, array('Dublin Core', 'Title') );
-    	$this->item_link = link_to($item, 'show', metadata($item, array('Dublin Core', 'Title') )); 
-    	$this->idl_link = metadata($file, array('Dublin Core', 'Source'));
-    	$this->collguide_link = metadata($item, array('Dublin Core', 'Relation'));
-    	$this->collection_link = link_to_collection_for_item();
     }
 
     public function getImageUrl() {
@@ -65,43 +64,19 @@ class Scriptus extends Omeka_Record_AbstractRecord
     	return $this->collection_link;
     }
 
-    public function isValid($item, $file, $itemId) {
+    private function _isValid($item, $file, $itemId) {
     	if (!$item || !$file) {
 
-    	    return false;
+    	    throw new Zend_Controller_Action_Exception('This page does not exist', 404); 
 
     	} elseif ($file->item_id != $itemId) {
 
-    	    return false;          
+    	    throw new Zend_Controller_Action_Exception('This page does not exist', 404);        
 
     	} else {
 
-    		return true;
+    		return;
     	}
-    }
-
-    public function buildForm() {
-    	//create a new Omeka form
-    	$this->form = new Omeka_Form;         
-    	$this->form->setMethod('post'); 
-
-    	$transcriptionArea = new Zend_Form_Element_Textarea('transcribebox');  
-
-    	$transcriptionArea  ->setRequired(true)       
-    	                    ->setValue($this->transcription)
-    	                    ->setAttrib('class', 'col-xs-12')
-    	                    ->setAttrib('class', 'form-control');
-    	
-    	$this->form->addElement($transcriptionArea);
-
-    	$save = new Zend_Form_Element_Submit('save');
-    	$save ->setLabel('Save');
-    	$save->setAttrib('class', 'btn btn-primary');
-    	$save->setAttrib('data-loading-text', "Saving...");
-    	$save->setAttrib('id', 'save-button');
-    	$this->form->addElement($save);
-
-    	return $this->form;
     }
 
 }

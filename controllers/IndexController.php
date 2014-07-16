@@ -3,42 +3,27 @@
 class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 {
         
-    public function init()
-    {        
-        
-        $this->_helper->db->setDefaultModelName('Scriptus');
-    }
-    
-    
     public function transcribeAction()
     {
-
-        $scriptus = new Scriptus();
 
         $itemId = $this->getParam('item');
         $fileId = $this->getParam('file');
 
-        $scriptus->setRecords($itemId, $fileId);
+        $scriptus = new Scriptus($itemId, $fileId);
 
         $item = $scriptus->getItem();        
         $file = $scriptus->getFile(); 
 
-        if ($scriptus->isValid($item, $file, $itemId) == false) {
-            throw new Zend_Controller_Action_Exception('This page does not exist', 404);   
-        } 
-            
-        set_current_record('item', $item); 
-        $scriptus->setMetadata($item, $file); 
+        $this->transcription = $scriptus->getTranscription(); 
 
-        $this->view->imageUrl = $scriptus->getImageUrl(); 
-        $this->view->transcription = $scriptus->getTranscription();           
+        $this->view->imageUrl = $scriptus->getImageUrl();                           
         $this->view->file_title = $scriptus->getFileTitle();            
         $this->view->item_link = $scriptus->getItemLink();
         $this->view->collection_link = $scriptus->getCollectionLink(); 
         $this->view->idl_link = $scriptus->getIdlLink(); 
         $this->view->collguide_link = $scriptus->getCollguideLink();           
 
-        $this->view->form = $scriptus->buildForm();   
+        $this->view->form = $this->_buildForm();
 
         $paginationUrls = array();  
         $files = get_records('file', array('item_id'=>$itemId), 999);
@@ -60,7 +45,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
             }
             
-        $this->view->paginationUrls = $paginationUrls; 
+        $this->view->paginationUrls = $paginationUrls;     
 
     }
 
@@ -80,6 +65,30 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $file->addTextForElement($element, $transcription, false);
     
         $file->save();    
+    }
+
+    private function _buildForm() {
+        //create a new Omeka form
+        $this->form = new Omeka_Form;         
+        $this->form->setMethod('post'); 
+
+        $transcriptionArea = new Zend_Form_Element_Textarea('transcribebox');  
+
+        $transcriptionArea  ->setRequired(true)       
+                            ->setValue($this->transcription)
+                            ->setAttrib('class', 'col-xs-12')
+                            ->setAttrib('class', 'form-control');
+        
+        $this->form->addElement($transcriptionArea);
+
+        $save = new Zend_Form_Element_Submit('save');
+        $save ->setLabel('Save');
+        $save->setAttrib('class', 'btn btn-primary');
+        $save->setAttrib('data-loading-text', "Saving...");
+        $save->setAttrib('id', 'save-button');
+        $this->form->addElement($save);
+
+        return $this->form;
     }
     
 
