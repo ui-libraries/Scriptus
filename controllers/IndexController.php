@@ -66,8 +66,66 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $element = $file->getElement('Scriptus', 'Transcription');
         $file->deleteElementTextsByElementId(array($element->id));
         $file->addTextForElement($element, $transcription, false);
-    
-        $file->save();    
+
+        //Update transcription status to Started if any transcription was submitted
+        if ($transcription != ''){
+            $statusText = 'Started';
+        }
+        else {
+            $statusText = '';
+        }
+
+        //update status based on text in transcription field
+        $element = $file->getElement('Scriptus', 'Status');
+        $file->deleteElementTextsByElementId(array($element->id));
+        $file->addTextForElement($element, $statusText, false);
+
+        $file->save();
+
+        /*Update progress of item by counting the number of files associated with the item  that have been started*/
+
+        //get the parent item
+        $item = $file->getItem();
+
+        //get all the parent item's files
+        $files = $item->getFiles();
+
+        //get the number of files associated with the item
+        $fileLength = count($files);
+
+        //use this variable to track the number of files that have been started
+        $numberStarted = 0;
+
+        //iterate through files, tracking the number started with $numberStarted.  
+        foreach($files as $file){
+            
+            $status = $file->getElementTexts('Scriptus', 'Status');
+            $status = $status[0];
+            if (($status->text == 'Started') || ($status->text == 'Needs Review') || ($status->text == 'Completed')){
+                $numberStarted++;
+            }
+        }
+
+        //calculate percentage progress in item with numberStarted and fileLength
+        $progress = round($numberStarted / $fileLength * 100);
+
+        //update percent completed
+        $element = $item->getElement('Scriptus', 'Percent Completed');
+        $item->deleteElementTextsByElementId(array($element->id));
+        $item->addTextForElement($element, $progress, false);
+
+
+
+        //Scriptus does not use  Percent Needs Review and Percent Completed - only Percent Completed is tracked.  
+        //However, the legacy information from Scripto in Percent Needs Review and Percent Completed has been left as is until one of the files in a given item have been saved.
+        //On the front-end, both percent completed and percent needs review should be added together to get the total progress -- this ensures backward compatibility with Scripto, which used both fields.
+        //But since Scriptus just uses one field to track progress, we want to update Percent Needs Review to be zero when we save so that when the two values are added, we make sure that what's in Percent Needs Review doesn't get double-counted (in Scriptus, what used to be in Percent Needs Review is now included in Percent Completed).
+        $element = $item->getElement('Scriptus', 'Percent Needs Review');
+        $item->deleteElementTextsByElementId(array($element->id));
+        $item->addTextForElement($element, 0, false);
+
+        //save item
+        $item->save();    
     }
 
     private function _getForm() {
