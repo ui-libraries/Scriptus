@@ -39,9 +39,10 @@
 
 		   		<div class="tab-pane active" id="transcribe">
 			   		<ul>
-			   			<li><p><span class="fa fa-file-text fa-lg"></span><strong><?php echo $this->file_title; ?> </strong></p></li>
+			   			<li><h5><span class="fa fa-archive fa-lg"></span><?php echo $this->collection_link; ?> </h5></li>			   			
 			   			<li><p><span class="fa fa-book fa-lg"></span><?php echo $this->item_link; ?> </p></li>
-			   			<li><p><span class="fa fa-archive fa-lg"></span><?php echo $this->collection_link; ?> </p></li>
+			   			<li><p><span class="fa fa-file-text fa-lg"></span><strong><?php echo $this->file_title; ?> </strong></p></li>
+			   			
 		   			</ul>
 
 		   			<div class="dropdown">

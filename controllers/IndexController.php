@@ -6,22 +6,28 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
     public function transcribeAction()
     {
 
+        //get the item and file ids
         $itemId = $this->getParam('item');
         $fileId = $this->getParam('file');
 
         $scriptus = new Scriptus($itemId, $fileId);
+        $bars = new Bars($itemId);
 
+        //set the transcription for the page
         $this->transcription = $scriptus->getTranscription(); 
 
+        //send everything to the view
         $this->view->imageUrl = $scriptus->getImageUrl();                           
         $this->view->file_title = $scriptus->getFileTitle();            
         $this->view->item_link = $scriptus->getItemLink();
         $this->view->collection_link = $scriptus->getCollectionLink(); 
         $this->view->idl_link = $scriptus->getIdlLink(); 
-        $this->view->collguide_link = $scriptus->getCollguideLink();           
+        $this->view->collguide_link = $scriptus->getCollguideLink();  
+        $this->view->percent_complete = $bars->getPercentComplete();         
 
-        $this->view->form = $this->_buildForm();
+        $this->view->form = $this->_getForm();
 
+        //set up pagination array
         $paginationUrls = array();  
         $files = get_records('file', array('item_id'=>$itemId), 999);
 
@@ -64,7 +70,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $file->save();    
     }
 
-    private function _buildForm() {
+    private function _getForm() {
         //create a new Omeka form
         $this->form = new Omeka_Form;         
         $this->form->setMethod('post'); 
