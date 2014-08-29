@@ -42,7 +42,8 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
             }
             
-        $this->view->paginationUrls = $paginationUrls;     
+        $this->view->paginationUrls = $paginationUrls; 
+   
 
     }
 
