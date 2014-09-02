@@ -174,40 +174,49 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
     //Get the most recent transcriptions from the database.  The view also makes a query to the Disqus API to get most recent comments
     public function recentcommentsAction(){
+        //Get recent changes
         $sql = "select * from Scriptus_changes order by time_changed DESC;";
         $db = get_db();
         $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
         $stmt->execute();
 
-        $html = '';
-
+        //Get five most recent transcriptions
         $numberOfRecentTranscriptions = 0;
+
+        //Add those transcriptions to recently transcribed, which we will add to the view below
+
         $recentlyTranscribed = array();
+        //Stop getting recent transcriptions when five is hit
         while ($numberOfRecentTranscriptions < 5) {
 
             $row = $stmt->fetch();
+
+            //A single transcription to be added to recentlyTranscribed
             $transcribeItem = array();
-            //$html .= '<p>Link to page: ' . $row["URL_changed"] . '</p><p>Username: ' . $row["username"] . '</p><p>Changed :' . $row["time_changed"] . "</p>"; 
+          
 
             $transcribeItem["URL_changed"] = $row["URL_changed"];
 
-            //Ok, this is a really ugly way to do this, but it also involved changing the least amount of things:
+            //Determine if transcribed URL is already in list.  Not the prettiest way to do this
             $saveItem = 1;
             foreach($recentlyTranscribed as $recent){
                 if ($transcribeItem["URL_changed"] == $recent["URL_changed"]){
                     $saveItem = 0;
                 }
             }
+            //Add a transcription if the URL is not already in our array
             if ($saveItem == 1){
                 $transcribeItem["username"] = $row["username"];
                 $transcribeItem["time_changed"] = $row["time_changed"];
+
                 $numberOfRecentTranscriptions++;
+
                 array_push($recentlyTranscribed, $transcribeItem);
             }
 
-            //print_r($row);
         }
 
+        //add recent transcriptions to view
         $this->view->recentTranscriptions = $recentlyTranscribed;
     
     }
