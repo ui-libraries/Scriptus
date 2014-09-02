@@ -40,9 +40,23 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
                     'module'       => 'scriptus',
                     'controller'   => 'index',
                     'action'       => 'save',
+                
+)            )
+        );   
+
+        $router->addRoute(
+            'recentcomments',
+            new Zend_Controller_Router_Route(
+                'recent-comments',
+                array(
+                    'module'       => 'scriptus',
+                    'controller'   => 'index',
+                    'action'       => 'recentcomments',
                 )
             )
-        );     
+        ); 
+
+
         
     }
 

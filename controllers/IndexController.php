@@ -63,12 +63,12 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         $oldTranscription = $firstElement->text; 
         
-        //set existingTranscription, which will be used at bottom to update the Scriptus_changes table    
+        //set newTranscription, which will be used at bottom to update the Scriptus_changes table    
         if ($oldTranscription){
-            $existingTranscription = 1;
+            $newTranscription = 0;
         }
         else {
-            $existingTranscription = 0;
+            $newTranscription = 1;
         }
 
 
@@ -164,13 +164,54 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
 
         //Insert information about change into Scriptus_changes
-        $sql = "insert into Scriptus_changes VALUES ('" . $uri . "', '" . $username . "', '" . $timestamp .  "', '" . $existingTranscription . "')";
+        $sql = "insert into Scriptus_changes VALUES ('" . $uri . "', '" . $username . "', '" . $timestamp .  "', '" . $newTranscription . "')";
         $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
         $stmt->execute(array($uri, $user->username, $timestamp));
     
 
 
     }
+
+    //Get the most recent transcriptions from the database.  The view also makes a query to the Disqus API to get most recent comments
+    public function recentcommentsAction(){
+        $sql = "select * from Scriptus_changes order by time_changed DESC;";
+        $db = get_db();
+        $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
+        $stmt->execute();
+
+        $html = '';
+
+        $numberOfRecentTranscriptions = 0;
+        $recentlyTranscribed = array();
+        while ($numberOfRecentTranscriptions < 5) {
+
+            $row = $stmt->fetch();
+            $transcribeItem = array();
+            //$html .= '<p>Link to page: ' . $row["URL_changed"] . '</p><p>Username: ' . $row["username"] . '</p><p>Changed :' . $row["time_changed"] . "</p>"; 
+
+            $transcribeItem["URL_changed"] = $row["URL_changed"];
+
+            //Ok, this is a really ugly way to do this, but it also involved changing the least amount of things:
+            $saveItem = 1;
+            foreach($recentlyTranscribed as $recent){
+                if ($transcribeItem["URL_changed"] == $recent["URL_changed"]){
+                    $saveItem = 0;
+                }
+            }
+            if ($saveItem == 1){
+                $transcribeItem["username"] = $row["username"];
+                $transcribeItem["time_changed"] = $row["time_changed"];
+                $numberOfRecentTranscriptions++;
+                array_push($recentlyTranscribed, $transcribeItem);
+            }
+
+            //print_r($row);
+        }
+
+        $this->view->recentTranscriptions = $recentlyTranscribed;
+    
+    }
+
 
     private function _buildForm() {
         //create a new Omeka form
