@@ -214,7 +214,18 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
             if ($saveItem == 1){
                 $transcribeItem["username"] = $row["username"];
                 $transcribeItem["time_changed"] = $row["time_changed"];
+                $transcribeItem["collection_name"] = $row["collection_name"];
 
+                $urlArray = explode("/", $transcribeItem["URL_changed"]);
+                $fileID = array_pop($urlArray); //file ID in URL
+                $itemID = array_pop($urlArray); //item ID in URL
+                $scriptus = new Scriptus($itemID, $fileID);
+                $imageURL = $scriptus->getImageUrl();
+
+                $transcribeItem["image_url"] = $imageURL;
+                $transcribeItem["transcription"] = $scriptus->getTranscription();
+
+                
                 $numberOfRecentTranscriptions++;
 
                 array_push($recentlyTranscribed, $transcribeItem);
@@ -233,54 +244,63 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $currentYear = date("Y");
         $currentMonth = date("M");
 
-        //Starts month before, goes to month after
-        $offset = 1;
+        //Starts month before, goes to month after.  -1 is current month.
+        $offset = -1;
 
         $submissionArray = array();
 
         $db = get_db();
 
+        $collectionArray = array();
+        $collections = get_records('Collection');
+        set_loop_records('Collection', $collections);
 
         foreach (loop('collections') as $collection){
-            print_r("HI66");
+            $title = metadata('collection', array('Dublin Core', 'Title'));
+            array_push($collectionArray, $title);
         }
-        print_r("HEY66");
+        
 
-        //When the offset reaches -1, the current month has been queried
+        //When the offset reaches -1, the current month is being queried
         while ($offset >= -1){
 
-        
-            $time = mktime(0,0,0,date("m")-$offset,1,date("y"));
-            $date = date('Y-m', $time);
+            foreach ($collectionArray as $collection){
 
-            $time = mktime(0,0,0,date("m")-($offset+1),1,date("y"));
-            $datePrevMonth = date('Y-m', $time);
+                $time = mktime(0,0,0,date("m")-$offset,1,date("y"));
+                $date = date('Y-m', $time);
 
-            $sql = 'select * from Scriptus_changes where time_changed > "' . $datePrevMonth . '" and time_changed < "' . $date . '" ORDER BY time_changed DESC';
-            
-            print_r($sql);
+                $time = mktime(0,0,0,date("m")-($offset+1),1,date("y"));
+                $datePrevMonth = date('Y-m', $time);
 
-            $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
-            $stmt->execute();
+                $sql = 'select * from Scriptus_changes where time_changed > "' . $datePrevMonth . '" and time_changed < "' . $date . '" and collection_name = "' . $collection . '" ORDER BY time_changed DESC';
+                
+                print_r($sql);
 
-            $submissionItem = array();
-            $rowCount = 0;
+                $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
+                $stmt->execute();
 
-            $currentMonth = date("m")-$offset;
+                $submissionItem = array();
+                $rowCount = 0;
 
-            while ($row = $stmt->fetch()){
-                if ($row["new_transcription"]==1){
-                    $rowCount++;
+                $currentMonth = date("m")-$offset;
+
+                //TODO: Have it only count new transcriptions!!! Disabled right now to make it easier to see results
+                while ($row = $stmt->fetch()){
+                    if ($row["new_transcription"]==0){
+                        $rowCount++;
+                    }
                 }
+
+                $submissionItem["collection"] = $collection;
+                $submissionItem["date"] = $date;
+                $submissionItem["transcriptionCount"] = $rowCount;
+
+                array_push($submissionArray, $submissionItem);
+
             }
 
-            
-            $submissionItem["date"] = $date;
-            $submissionItem["transcriptionCount"] = $rowCount;
-
-            array_push($submissionArray, $submissionItem);
-
             $offset--;
+
         }
 
          $this->view->submissionStats = $submissionArray;
