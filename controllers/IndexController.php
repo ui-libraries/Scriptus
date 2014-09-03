@@ -62,6 +62,12 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $firstElement = $element[0]; //getElementTexts returns array, element[0] is first element
 
         $oldTranscription = $firstElement->text; 
+
+        //get collection name
+        $itemId = $this->getParam('item');
+        $fileId = $this->getParam('file');
+        $scriptus = new Scriptus($itemId, $fileId);
+        $collectionName = $scriptus->getCollectionName();
         
         //set newTranscription, which will be used at bottom to update the Scriptus_changes table    
         if ($oldTranscription){
@@ -151,7 +157,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         //Get username, or define as empty string if user isn't logged in -- this will be saved to Scriptus_changes
         if ($user){
             $username = $user->username;
-        }
+        }             
         else{
             $username = '';
         }
@@ -164,7 +170,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
 
         //Insert information about change into Scriptus_changes
-        $sql = "insert into Scriptus_changes VALUES ('" . $uri . "', '" . $username . "', '" . $timestamp .  "', '" . $newTranscription . "')";
+        $sql = "insert into Scriptus_changes VALUES ('" . $uri . "', '" . $username . "', '" . $timestamp .  "', '" . $newTranscription .  "', '" . $collectionName . "')";
         $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
         $stmt->execute(array($uri, $user->username, $timestamp));
     
@@ -216,9 +222,68 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         }
 
+       
         //add recent transcriptions to view
         $this->view->recentTranscriptions = $recentlyTranscribed;
     
+    }
+
+    public function submissionstatsAction(){
+
+        $currentYear = date("Y");
+        $currentMonth = date("M");
+
+        //Starts month before, goes to month after
+        $offset = 1;
+
+        $submissionArray = array();
+
+        $db = get_db();
+
+
+        foreach (loop('collections') as $collection){
+            print_r("HI66");
+        }
+        print_r("HEY66");
+
+        //When the offset reaches -1, the current month has been queried
+        while ($offset >= -1){
+
+        
+            $time = mktime(0,0,0,date("m")-$offset,1,date("y"));
+            $date = date('Y-m', $time);
+
+            $time = mktime(0,0,0,date("m")-($offset+1),1,date("y"));
+            $datePrevMonth = date('Y-m', $time);
+
+            $sql = 'select * from Scriptus_changes where time_changed > "' . $datePrevMonth . '" and time_changed < "' . $date . '" ORDER BY time_changed DESC';
+            
+            print_r($sql);
+
+            $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
+            $stmt->execute();
+
+            $submissionItem = array();
+            $rowCount = 0;
+
+            $currentMonth = date("m")-$offset;
+
+            while ($row = $stmt->fetch()){
+                if ($row["new_transcription"]==1){
+                    $rowCount++;
+                }
+            }
+
+            
+            $submissionItem["date"] = $date;
+            $submissionItem["transcriptionCount"] = $rowCount;
+
+            array_push($submissionArray, $submissionItem);
+
+            $offset--;
+        }
+
+         $this->view->submissionStats = $submissionArray;
     }
 
 

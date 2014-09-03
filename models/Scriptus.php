@@ -48,6 +48,13 @@ class Scriptus
     	return $this->collguide_link;
     }
 
+    public function getCollectionName(){
+        $item = get_record_by_id('item', 171);
+        $collection = get_collection_for_item($item);
+        $this->collection_name = metadata($collection, array('Dublin Core', 'Title')); 
+        return $this->collection_name;
+    }
+
     public function getCollectionLink() {
         set_current_record('item', $this->item);
         $this->collection_link = link_to_collection_for_item();
