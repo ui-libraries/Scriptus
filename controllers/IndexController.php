@@ -6,28 +6,22 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
     public function transcribeAction()
     {
 
-        //get the item and file ids
         $itemId = $this->getParam('item');
         $fileId = $this->getParam('file');
 
         $scriptus = new Scriptus($itemId, $fileId);
-        $bars = new Bars($itemId);
 
-        //set the transcription for the page
         $this->transcription = $scriptus->getTranscription(); 
 
-        //send everything to the view
         $this->view->imageUrl = $scriptus->getImageUrl();                           
         $this->view->file_title = $scriptus->getFileTitle();            
         $this->view->item_link = $scriptus->getItemLink();
         $this->view->collection_link = $scriptus->getCollectionLink(); 
         $this->view->idl_link = $scriptus->getIdlLink(); 
-        $this->view->collguide_link = $scriptus->getCollguideLink();  
-        $this->view->percent_complete = $bars->getPercentComplete();         
+        $this->view->collguide_link = $scriptus->getCollguideLink();           
 
-        $this->view->form = $this->_getForm();
+        $this->view->form = $this->_buildForm();
 
-        //set up pagination array
         $paginationUrls = array();  
         $files = get_records('file', array('item_id'=>$itemId), 999);
 
@@ -48,8 +42,9 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
             }
             
-        $this->view->paginationUrls = $paginationUrls;     
+        $this->view->paginationUrls = $paginationUrls; 
 
+   
     }
 
      public function saveAction() 
@@ -62,7 +57,22 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $request = new Zend_Controller_Request_Http();
         $transcription = $request->getPost('transcription');        
 
-        //save the new transcription data
+        //check if there was old transcription data (this is used for analytics purposes)
+        $element = $file->getElementTexts('Scriptus', 'Transcription');
+        $firstElement = $element[0]; //getElementTexts returns array, element[0] is first element
+
+        $oldTranscription = $firstElement->text; 
+        
+        //set newTranscription, which will be used at bottom to update the Scriptus_changes table    
+        if ($oldTranscription){
+            $newTranscription = 0;
+        }
+        else {
+            $newTranscription = 1;
+        }
+
+
+        //Update file with new transcription information
         $element = $file->getElement('Scriptus', 'Transcription');
         $file->deleteElementTextsByElementId(array($element->id));
         $file->addTextForElement($element, $transcription, false);
@@ -74,6 +84,8 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         else {
             $statusText = '';
         }
+
+
 
         //update status based on text in transcription field
         $element = $file->getElement('Scriptus', 'Status');
@@ -126,9 +138,91 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         //save item
         $item->save();    
+
+        /*save URL last edited by user*/
+        $uri = getenv("REQUEST_URI");
+
+        //Chop save off of end of URL
+        $uri = substr($uri, 0, -5);
+
+        
+        $user = current_user();
+
+        //Get username, or define as empty string if user isn't logged in -- this will be saved to Scriptus_changes
+        if ($user){
+            $username = $user->username;
+        }
+        else{
+            $username = '';
+        }
+
+        //Get database
+        $db = get_db();
+
+        //Timestamp format YYYY-MM-DD HH:MM:SS
+        $timestamp = date('Y-m-d H:i:s');
+
+
+        //Insert information about change into Scriptus_changes
+        $sql = "insert into Scriptus_changes VALUES ('" . $uri . "', '" . $username . "', '" . $timestamp .  "', '" . $newTranscription . "')";
+        $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
+        $stmt->execute(array($uri, $user->username, $timestamp));
+    
+
+
     }
 
-    private function _getForm() {
+    //Get the most recent transcriptions from the database.  The view also makes a query to the Disqus API to get most recent comments
+    public function recentcommentsAction(){
+        //Get recent changes
+        $sql = "select * from Scriptus_changes order by time_changed DESC;";
+        $db = get_db();
+        $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
+        $stmt->execute();
+
+        //Get five most recent transcriptions
+        $numberOfRecentTranscriptions = 0;
+
+        //Add those transcriptions to recently transcribed, which we will add to the view below
+
+        $recentlyTranscribed = array();
+        //Stop getting recent transcriptions when five is hit
+        while ($numberOfRecentTranscriptions < 5) {
+
+            $row = $stmt->fetch();
+
+            //A single transcription to be added to recentlyTranscribed
+            $transcribeItem = array();
+          
+
+            $transcribeItem["URL_changed"] = $row["URL_changed"];
+
+            //Determine if transcribed URL is already in list.  Not the prettiest way to do this
+            $saveItem = 1;
+            foreach($recentlyTranscribed as $recent){
+                if ($transcribeItem["URL_changed"] == $recent["URL_changed"]){
+                    $saveItem = 0;
+                }
+            }
+            //Add a transcription if the URL is not already in our array
+            if ($saveItem == 1){
+                $transcribeItem["username"] = $row["username"];
+                $transcribeItem["time_changed"] = $row["time_changed"];
+
+                $numberOfRecentTranscriptions++;
+
+                array_push($recentlyTranscribed, $transcribeItem);
+            }
+
+        }
+
+        //add recent transcriptions to view
+        $this->view->recentTranscriptions = $recentlyTranscribed;
+    
+    }
+
+
+    private function _buildForm() {
         //create a new Omeka form
         $this->form = new Omeka_Form;         
         $this->form->setMethod('post'); 
