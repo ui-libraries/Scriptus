@@ -17,8 +17,11 @@
       <?php //print_r($this->recentTranscriptions);
       foreach ($this->recentTranscriptions as $transcriptionItem): ?>
         <p>Link to page: <?php echo $transcriptionItem["URL_changed"] ?></p>
+        <p>Collection name: <?php echo $transcriptionItem["collection_name"] ?></p>
         <p> Username: <?php echo $transcriptionItem["username"] ?></p>
         <p> Changed: <?php echo $transcriptionItem["time_changed"] ?></p> 
+        <p> Image URL: <?php echo $transcriptionItem["image_url"] ?></p> 
+        <p> Transcrption: <?php echo snippet_by_word_count($transcriptionItem["transcription"], 10, '...') ?></p> 
       <?php endforeach; ?>
     </div>
   </div>

@@ -49,8 +49,7 @@ class Scriptus
     }
 
     public function getCollectionName(){
-        $item = get_record_by_id('item', 171);
-        $collection = get_collection_for_item($item);
+        $collection = get_collection_for_item($this->item);
         $this->collection_name = metadata($collection, array('Dublin Core', 'Title')); 
         return $this->collection_name;
     }

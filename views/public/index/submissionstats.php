@@ -14,6 +14,7 @@
        <?php print_r($this->asd); ?>
       <?php foreach ($this->submissionStats as $submissionMonth): ?>
       enters foreach
+        <p>Collection: <?php echo $submissionMonth["collection"] ?></p>
         <p>Date: <?php echo $submissionMonth["date"] ?></p>
         <p> Transcription count: <?php echo $submissionMonth["transcriptionCount"] ?></p>
       <?php endforeach; ?>
