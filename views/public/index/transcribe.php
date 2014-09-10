@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-<title>DIY History</title>
+<title>DIY History | Transcribe | <?php echo $this->collection_title; ?> | <?php echo $this->item_title; ?> | <?php echo $this->file_title; ?></title>
 
 <?php 
 	echo js_tag('jquery-1.9.1'); 

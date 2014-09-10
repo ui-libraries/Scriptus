@@ -14,11 +14,14 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $this->transcription = $scriptus->getTranscription(); 
 
         $this->view->imageUrl = $scriptus->getImageUrl();                           
-        $this->view->file_title = $scriptus->getFileTitle();            
+        $this->view->file_title = $scriptus->getFileTitle();
+        $this->view->item_title = $scriptus->getItemTitle();              
         $this->view->item_link = $scriptus->getItemLink();
+        $this->view->collection_title = $scriptus->getCollectionTitle();
         $this->view->collection_link = $scriptus->getCollectionLink(); 
         $this->view->idl_link = $scriptus->getIdlLink(); 
-        $this->view->collguide_link = $scriptus->getCollguideLink();           
+        $this->view->collguide_link = $scriptus->getCollguideLink(); 
+           
 
         $this->view->form = $this->_buildForm();
 
@@ -67,7 +70,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $itemId = $this->getParam('item');
         $fileId = $this->getParam('file');
         $scriptus = new Scriptus($itemId, $fileId);
-        $collectionName = $scriptus->getCollectionName();
+        $collectionName = $scriptus->getCollectionTitle();
         
         //set newTranscription, which will be used at bottom to update the Scriptus_changes table    
         if ($oldTranscription){
@@ -274,7 +277,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
                 $sql = 'select * from Scriptus_changes where time_changed > "' . $datePrevMonth . '" and time_changed < "' . $date . '" and collection_name = "' . $collection . '" ORDER BY time_changed DESC';
                 
-                print_r($sql);
+                //print_r($sql);
 
                 $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
                 $stmt->execute();

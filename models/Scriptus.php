@@ -38,6 +38,11 @@ class Scriptus
     	return $this->item_link;
     }
 
+    public function getItemTitle() {
+        $this->item_title = metadata($this->item, array('Dublin Core', 'Title'));
+        return $this->item_title;
+    }
+
     public function getIdlLink() {
         $this->idl_link = metadata($this->file, array('Dublin Core', 'Source'));
     	return $this->idl_link;
@@ -48,7 +53,7 @@ class Scriptus
     	return $this->collguide_link;
     }
 
-    public function getCollectionName(){
+    public function getCollectionTitle(){
         $collection = get_collection_for_item($this->item);
         $this->collection_name = metadata($collection, array('Dublin Core', 'Title')); 
         return $this->collection_name;

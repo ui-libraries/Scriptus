@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../omeka/plugins/Scriptus/views/public/css/font-awesome.min.css" rel="stylesheet">
-  <link href="../omeka/plugins/Scriptus/views/public/css/component.css" rel="stylesheet">
-</head>
+
+<?php echo head(array('title'=> 'recentComments')); ?>
+
 
 <div id="primary">
 <h1>Test of Disqus API </h1>
   <div id="content">
-    <div id="recent-comments" style="float: left; margin: 10px;">
+    <div id="recent-comments" style="float: left; margin: 10px; width: 45%;">
 
     <h2>Most recent comments</h2>
     </div>
-    <div id="recent-transcriptions" style="float: left; margin: 10px;">
+    <div id="recent-transcriptions" style="float: left; margin: 10px; width: 45%;">
        <h2>Most recent transcriptions</h2>
       <?php //print_r($this->recentTranscriptions);
       foreach ($this->recentTranscriptions as $transcriptionItem): ?>
@@ -57,6 +55,10 @@ $(document).ready(function () {
         message = aResponse.message;
         author = aResponse.author.name;
         postDate = aResponse.createdAt;
+        //TODO: Remove below if (it's there for testing)
+        if (i < 0){
+          console.log(aResponse.thread);
+        }
         threadLink = aResponse.thread.link;
      
 
