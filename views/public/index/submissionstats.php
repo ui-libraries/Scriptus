@@ -12,7 +12,7 @@
    
     <div id="recent-transcriptions" style="float: left; margin: 10px;">
        <h2>Most recent transcriptions</h2>
-       <?php print_r($this->asd); ?>
+      
       <?php foreach ($this->submissionStats as $submissionMonth): ?>
      
         <p>Collection: <b><?php echo $submissionMonth["collection"] ?></b></p>

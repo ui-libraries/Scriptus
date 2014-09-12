@@ -196,7 +196,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         $recentlyTranscribed = array();
         //Stop getting recent transcriptions when five is hit
-        while ($numberOfRecentTranscriptions < 5) {
+        while ($numberOfRecentTranscriptions < 6) {
 
             $row = $stmt->fetch();
 
@@ -223,9 +223,9 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
                 $fileID = array_pop($urlArray); //file ID in URL
                 $itemID = array_pop($urlArray); //item ID in URL
                 $scriptus = new Scriptus($itemID, $fileID);
-                $imageURL = $scriptus->getImageUrl();
+                $thumbnailURL = $scriptus->getImageThumbnail();
 
-                $transcribeItem["image_url"] = $imageURL;
+                $transcribeItem["image_url"] = $thumbnailURL;
                 $transcribeItem["transcription"] = $scriptus->getTranscription();
 
                 

@@ -7,10 +7,11 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
                               'define_routes'
                               );    
 
-    protected $_filters = array('guest_user_widgets', 'guest_user_links');
+    //protected $_filters = array('guest_user_widgets', 'guest_user_links');
 
      public function filterGuestUserLinks($links)
     {
+        
         //$url = url('guest-user/user/me');
         //$logoutUrl = url('users/logout');
         

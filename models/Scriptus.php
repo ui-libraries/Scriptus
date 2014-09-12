@@ -23,6 +23,18 @@ class Scriptus
     	return $this->imageUrl;
     }
 
+    public function getImageThumbnail() {
+        
+        $this->thumbnailUrl = $this->file->getWebPath('square_thumbnail');
+
+        /*Drew hack b/c he has no images */
+        $baseURL = Zend_Controller_Front::getInstance()->getRequest()->getBaseURL();
+        if ($baseURL == '/omeka-2.1.4'){
+            $this->thumbnailUrl ='http://diyhistory.ecn.uiowa.edu/omeka/files/square_thumbnails/54d437668a1c06eaf043fe939c1b0844.jpg';
+        }
+        return $this->thumbnailUrl;
+    }
+
     public function getTranscription() {
         $this->transcription = metadata($this->file, array('Scriptus', 'Transcription'));
     	return $this->transcription;
