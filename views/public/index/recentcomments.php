@@ -4,7 +4,20 @@
 
 <style>
   .recent-comment{
-    padding: 10px; background-color: #FFFFED; border-radius: 20px; border-style: solid; margin-bottom: 10px;
+  padding: 10px;
+  background-color: #FFFFED;
+  border-radius: 10px;
+  border-style: solid;
+  margin-bottom: 10px;
+  border-color: #C6A971;
+  border-width: 1px;
+  border-style: solid;
+  box-shadow: 2px 1px rgba(0, 0, 0, 0.3)
+  }
+
+  #recent-comments a {
+    color: black;
+
   }
 
   .recent-transcription {
@@ -131,9 +144,9 @@ $(document).ready(function () {
         
      
 
-        postBody = "<div class='recent-comment'>" + "<p>" + message + "</p>"; 
+        postBody = "<a href='" + threadLink + "'>" + "<div class='recent-comment'>" + "<p>" + message + "</p>"; 
 
-        postLink = "<p> " + "<a href='" + threadLink + "'>" + threadTitle + "</a>" + "</p>" + "</div>" ;
+        postLink = "<p> " + "<strong class='collectionName'>" + threadTitle + "</strong>" +"</p>" + "</div>" + "</a>"  ;
 
         post = postBody + postLink; 
        

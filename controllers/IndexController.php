@@ -242,13 +242,16 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
     
     }
 
+    //Get the new transcription submissions in past months.
     public function submissionstatsAction(){
 
         $currentYear = date("Y");
         $currentMonth = date("M");
 
-        //Starts month before, goes to month after.  -1 is current month.
-        $offset = -1;
+        //When this is 0, only the previous month is queried.  1 would include the last two months, 2 the last three, and so on.  Only months that are complete are queried (though that can be changed).
+        $monthsToQueryPastCurrentMonth = 0;
+
+
 
         $submissionArray = array();
 
@@ -263,16 +266,19 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
             array_push($collectionArray, $title);
         }
         
+        
+        $offset = $monthsToQueryPastCurrentMonth;
 
-        //When the offset reaches -1, the current month is being queried
-        while ($offset >= -1){
+        //When the offset reaches 0, the current month is being queried
+        while ($offset >= 0){
 
             foreach ($collectionArray as $collection){
 
-                $time = mktime(0,0,0,date("m")-$offset,1,date("y"));
+                //Offset - 1 is the previous month.  Only months that are over are used in the report, so the previous month is the last month we query.
+                $time = mktime(0,0,0,date("m")-($offset-1),1,date("y"));
                 $date = date('Y-m', $time);
 
-                $time = mktime(0,0,0,date("m")-($offset+1),1,date("y"));
+                $time = mktime(0,0,0,date("m")-($offset),1,date("y"));
                 $datePrevMonth = date('Y-m', $time);
 
                 $sql = 'select * from Scriptus_changes where time_changed > "' . $datePrevMonth . '" and time_changed < "' . $date . '" and collection_name = "' . $collection . '" ORDER BY time_changed DESC';
@@ -289,7 +295,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
                 //TODO: Have it only count new transcriptions!!! Disabled right now to make it easier to see results
                 while ($row = $stmt->fetch()){
-                    if ($row["new_transcription"]==0){
+                    if ($row["new_transcription"]==1){
                         $rowCount++;
                     }
                 }
