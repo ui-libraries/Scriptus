@@ -193,8 +193,8 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $numberOfRecentTranscriptions = 0;
 
         //Add those transcriptions to recently transcribed, which we will add to the view below
-
         $recentlyTranscribed = array();
+        
         //Stop getting recent transcriptions when five is hit
         while ($numberOfRecentTranscriptions < 6) {
 

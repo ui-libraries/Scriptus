@@ -15,6 +15,14 @@
   box-shadow: 2px 1px rgba(0, 0, 0, 0.3)
   }
 
+  .transcriptionLink {
+    text-decoration: none;
+    color: black;
+  }
+
+  .transcriptionLink:hover {
+
+  }
   #recent-comments a {
     color: black;
 
@@ -44,17 +52,26 @@
     padding: 10px;
   }
 
+  .comment-content {
+    display: block;
+  }
+
   .page-title {
     text-align: center;
   }
 
   .transcription-snippet {
+    background-color: white;
+    padding: 5px;
     margin-top: 10px;
     margin-bottom: 10px;
+    border-radius: 5px;
+    height: 7.15em;
   }
 
   .collectionName {
     font-size: .8em;
+    height: 2.85em;
   }
 
 </style>
@@ -80,11 +97,11 @@
           <p> Image URL: <?php echo $transcriptionItem["image_url"] ?></p> 
           <p> Transcription: <?php echo snippet_by_word_count($transcriptionItem["transcription"], 10, '...') ?></p> */ ?>
 
-          <a href="<?php echo $transcriptionItem["URL_changed"] ?>"><img src="<?php echo $transcriptionItem["image_url"] ?>" /></a>
+          <a href="<?php echo $transcriptionItem["URL_changed"] ?>" class="transcriptionLink"><img src="<?php echo $transcriptionItem["image_url"] ?>" />
 
           <div class="transcription-snippet">
             <p> <?php echo snippet_by_word_count($transcriptionItem["transcription"], 10, '...') ?></p>
-          </div>
+          </div></a>
 
           <p class="collectionName"><strong><?php echo $transcriptionItem["collection_name"] ?></strong></p>
           
@@ -94,7 +111,7 @@
   </div>
 </div>
 
-<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+
 <script type="text/javascript">
 
 $(document).ready(function () {
@@ -113,26 +130,23 @@ $(document).ready(function () {
 
       numberOfPostsToDisplay = 3;
 
+      collectionObject = {};
+      collectionArray = ["Pioneer Lives", "Iowa Women’s Lives: Letters and Diaries", "Szathmary Culinary Manuscripts and Cookbooks", "Building the Transcontinental Railroad", "Nile Kinnick Collection", "Civil War Diaries and Letters"];
+
+      for (var j = 0; j < collectionArray.length; j++){
+        collectionObject[collectionArray[j]] = {commentData: [], noOfComments: 0};
+      }
+
       if (result.response.length < numberOfPostsToDisplay){
          numberOfPostsToDisplay = result.response.length;
       }
       
-      
-      for (var i = 0; i < numberOfPostsToDisplay; i++){
+      enoughComments = false;
+      i = 0;
+
+      while (enoughComments == false){
         aResponse = result.response[i];
 
-        message = aResponse.message;
-        author = aResponse.author.name;
-        postDate = aResponse.createdAt;
-
-        postDate = new Date(postDate);
-        console.log("NEW DATE FORMAT");
-        console.log(postDate);
-        console.log("END NEW DATE FORMAT");
-        //TODO: Remove below if (it's there for testing)
-        if (i < 0){
-          //console.log(aResponse.thread);
-        }
         threadLink = aResponse.thread.link;
         threadTitle = aResponse.thread.title;
 
@@ -140,27 +154,89 @@ $(document).ready(function () {
         if (threadTitle.split(" | ").length > 1){
           threadArray = threadTitle.split ( " | ");
           threadTitle = threadArray.pop() + " | " + threadArray.pop();
+          collectionTitle = threadArray.pop();
         }
         
-     
+        if (collectionObject[collectionTitle]["noOfComments"] < 3){
+          collectionObject[collectionTitle]["commentData"].push(aResponse);
+          collectionObject[collectionTitle]["noOfComments"]++;
+          if (collectionObject[collectionTitle]["noOfComments"] == 2){
+            allCollectionsCompleted = true;
+            for (k = 0; k < collectionArray.length; k++){
+              collectionName = collectionArray[k];
+              collection = collectionObject[collectionName];
+              if (collection["noOfComments"] < 2){
+                allCollectionsCompleted = false;
 
-        postBody = "<a href='" + threadLink + "'>" + "<div class='recent-comment'>" + "<p>" + message + "</p>"; 
+              }
+            }
+            console.log("ALL COLLECTIONS COMPLETED IS");
+            console.log(allCollectionsCompleted);
+            if (allCollectionsCompleted == true){
 
-        postLink = "<p> " + "<strong class='collectionName'>" + threadTitle + "</strong>" +"</p>" + "</div>" + "</a>"  ;
-
-        post = postBody + postLink; 
-       
-        //document.write("author: " + author + "<br>");
-        //document.write("message: " + message);
-        //document.write("post date: " + postDate + "<br>");
-         //document.write("URL for thread: " + threadLink + "<br>");
-
-        $('#recent-comments').append(post);
-        console.log(post);
-        //document.write("<br><br><br>")
-
-        console.log(aResponse);
+              enoughComments = true;
+            }
+          }
+        }
+      i++;  
       }
+
+      bodyString = '';
+
+      bodyString += '<div class="accordion" id="accordion1">';
+
+      console.log("COLLECTION OBJECT IS");
+      console.log(collectionObject);
+
+      collectionNumberTracker = 0; 
+
+      for (collectionName in collectionObject){
+
+        collectionTitleString = '<h3>' + collectionName + '</h3>';
+
+        bodyString += '<div class="accordion-group">';
+        bodyString += '<div class="accordion-heading">';
+        bodyString += '<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse' + collectionNumberTracker + '"">' + collectionTitleString + '</a></div>';
+
+        bodyString += '<div id="collapse' + collectionNumberTracker + '" class="accordion-body collapse in">';
+
+        collection = collectionObject[collectionName];
+        for (propName in collection){
+
+            collectionProp = collection[propName];
+            for (m = 0; m < collectionProp.length; m++){
+              comment = collectionProp[m];
+              message = comment.message;
+              message = message.replace('<p>', '');
+              message = message.replace('</p>', '');
+
+              author = comment.author.name;
+              postDate = comment.createdAt;
+
+              threadLink = aResponse.thread.link;
+              threadTitle = aResponse.thread.title;
+
+              if (threadTitle.split(" | ").length > 1){
+                threadArray = threadTitle.split ( " | ");
+                threadTitle = threadArray.pop() + " | " + threadArray.pop();
+                collectionTitle = threadArray.pop();
+              }
+
+              postBody = "<a href='" + threadLink + "'>" + "<div class='recent-comment'>" + "<span class='comment-content'>" + message + "</span>"; 
+
+              postLink =  "<strong class='collectionName'>" + threadTitle + "</strong>" + "</div>" + "</a>"  ;
+
+              post = postBody + postLink; 
+
+              bodyString += post;
+          } 
+        
+        }
+        bodyString += '</div>'; 
+        collectionNumberTracker++;
+      } 
+      bodyString += '</div></div>';   
+      $('#recent-comments').append(bodyString);
     },
     error: function(parsedjson, textStatus, errorThrown){
       console.log("ERRORRRR");
