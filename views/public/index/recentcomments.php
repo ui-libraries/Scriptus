@@ -25,6 +25,7 @@
   }
   #recent-comments a {
     color: black;
+    text-decoration: none;
 
   }
 
@@ -34,6 +35,27 @@
 
   #recent-comments {
     float: left; margin: 10px; width: 35%;
+  }
+
+  #recent-comments h2 {
+    padding: 0 8px 0 8px;
+
+  }
+
+   .accordion-body {
+  padding: 0 8px 0 8px;
+}
+
+  #accordion0 {
+    padding-top: 0px;
+  }
+
+  .accordion-group {
+    border: none;
+  }
+  .accordion-group h3 {
+    background-color: rgba(0, 0, 0, 0.03);
+    padding: 5px;
   }
 
   #recent-transcriptions {
@@ -50,6 +72,7 @@
     margin-right: 10px;
     margin-bottom: 20px;
     padding: 10px;
+    height: 450px;
   }
 
   .comment-content {
@@ -69,15 +92,23 @@
     height: 7.15em;
   }
 
-  .collectionName {
+  .transcription-breadcrumbs a {
     font-size: .8em;
-    height: 2.85em;
+    font-weight: bold;
   }
+
+  .transcription-item a {
+    color: black;
+  }
+
+
+
+
 
 </style>
 
 <div id="primary">
-<h1 class="page-title">Site Activity </h1>
+  <h1 class="page-title">Site Activity </h1>
   <div id="content">
     <div id="recent-comments">
     <h2>Most recent comments</h2>
@@ -97,13 +128,19 @@
           <p> Image URL: <?php echo $transcriptionItem["image_url"] ?></p> 
           <p> Transcription: <?php echo snippet_by_word_count($transcriptionItem["transcription"], 10, '...') ?></p> */ ?>
 
-          <a href="<?php echo $transcriptionItem["URL_changed"] ?>" class="transcriptionLink"><img src="<?php echo $transcriptionItem["image_url"] ?>" />
+           <a href="<?php echo $transcriptionItem["URL_changed"] ?>" class="transcriptionLink">
+            <img src="<?php echo $transcriptionItem["image_url"] ?>" /> 
 
-          <div class="transcription-snippet">
-            <p> <?php echo snippet_by_word_count($transcriptionItem["transcription"], 10, '...') ?></p>
-          </div></a>
+            <div class="transcription-snippet">
+              <p> <?php echo snippet_by_word_count($transcriptionItem["transcription"], 10, '...') ?></p>
+            </div>
+           </a>
 
-          <p class="collectionName"><strong><?php echo $transcriptionItem["collection_name"] ?></strong></p>
+          <div class="transcription-breadcrumbs">
+            <a href="<?php echo $transcriptionItem["URL_changed"] ?>"><?php echo $transcriptionItem["file_title"] ?></a> |
+            <?php echo $transcriptionItem["item_link"] ?> | 
+            <?php echo $transcriptionItem["collection_link"] ?>
+          </div>
           
         </div>
       <?php endforeach; ?>
@@ -116,126 +153,159 @@
 
 $(document).ready(function () {
 
+  //This JavaScript queries Disqus for the latest comments in order to display the number desired from each collection.  If the number desired from a given collection aren't present in the latest 100 comments, then only the number of comments that are present will appear.
 
-   var disqusPublicKey = "jmgI7Iex4CKNqXPAVCq6d7gI8HISZRjx442VnEdhl0GDHgJJ20aheCkcmygqHwXX";
-  var disqusShortname = "diyh"; // Replace with your own shortname
+
+  var disqusPublicKey = "jmgI7Iex4CKNqXPAVCq6d7gI8HISZRjx442VnEdhl0GDHgJJ20aheCkcmygqHwXX";
+  var disqusShortname = "diyh"; 
 
   $.ajax({
     type: 'GET',
-    //the related=thread parameter below is necessary for the query to return links to the posts
-    url: "http://disqus.com/api/3.0/forums/listPosts.jsonp?related=thread",
+    /*the related=thread URL parameter below is necessary for the query to return links to the posts.  The second URL paramter, limit 100, is the max we can get back.  */
+    url: "http://disqus.com/api/3.0/forums/listPosts.jsonp?related=thread&limit=100",
     data: { api_key: disqusPublicKey, forum : disqusShortname},
     dataType: 'jsonp',
     success: function (result) {
+    console.log("RESULT IS");
+    console.log(result);
 
-      numberOfPostsToDisplay = 3;
-
+      //The collection object will have the collections and then the associated comments stored in it
       collectionObject = {};
+
+      //All the collections currently tracked.  Update as necessary.
       collectionArray = ["Pioneer Lives", "Iowa Women’s Lives: Letters and Diaries", "Szathmary Culinary Manuscripts and Cookbooks", "Building the Transcontinental Railroad", "Nile Kinnick Collection", "Civil War Diaries and Letters"];
 
+      //The number of comments we're displaying for each collection
+      commentsPerCollection = 3;
+
+      //When we complete a collection, increment this variable
+      collectionsComplete = 0;
+
+      //Each time we complete a collection, we check to see if we've completed all the collections by comparing collectionsComplete to collectionsToBeCompleted
+      collectionsToBeCompleted = collectionArray.length;
+
+      //Create structure for collection object that we'll use to display collections
       for (var j = 0; j < collectionArray.length; j++){
         collectionObject[collectionArray[j]] = {commentData: [], noOfComments: 0};
       }
 
-      if (result.response.length < numberOfPostsToDisplay){
-         numberOfPostsToDisplay = result.response.length;
-      }
-      
+      //The number of comments we're displaying for each collection
+      commentsPerCollection = 3;
+
+      //When each collection has the above number of comments per collection, enoughComments should be true
       enoughComments = false;
+
+      //Used to track iterating through array of results
       i = 0;
 
-      while (enoughComments == false){
+      //Iterate through API results until we have the desired number of comments.  The results are found in an object with a property response that is just an array of comments.
+      while ((enoughComments == false) && (i < result.response.length)){
+        
+        //The next comment in the array
         aResponse = result.response[i];
 
-        threadLink = aResponse.thread.link;
+
         threadTitle = aResponse.thread.title;
 
-        
+        //To identify the collection, item and file names associated with a comment, we pull that information out of the HTML title.  DON'T CHANGE THE FORMAT OF THE HTML TITLE.
+        //The format of a title is DIY History | Transcribe | Collection Name | Item Name | File Name.
+        //If the title fits that format, split the string on the '|' character and then pop the last two items off of the resulting array to format a title for the user.
+        //If the title doesn't fit that format, then we avoid performing array operations on a non-array with the if statement.  
         if (threadTitle.split(" | ").length > 1){
           threadArray = threadTitle.split ( " | ");
-          threadTitle = threadArray.pop() + " | " + threadArray.pop();
+
+          //Title we display to the user
+          displayTitle = threadArray.pop() + " | " + threadArray.pop();
+
+          //TODO: Needed?
           collectionTitle = threadArray.pop();
         }
         
-        if (collectionObject[collectionTitle]["noOfComments"] < 3){
+        //Add comment to what we're going to display as long as we haven't reached the max number of comments for a collection
+        if (collectionObject[collectionTitle]["noOfComments"] < commentsPerCollection){
+
+          //Add comment data to object that holds what we're going to display
           collectionObject[collectionTitle]["commentData"].push(aResponse);
+
+          //Add display title to comment data 
+          collectionObject[collectionTitle]["commentData"]["displayTitle"] = displayTitle;
+
+          //Track number of comments added for each collection
           collectionObject[collectionTitle]["noOfComments"]++;
-          if (collectionObject[collectionTitle]["noOfComments"] == 2){
-            allCollectionsCompleted = true;
-            for (k = 0; k < collectionArray.length; k++){
-              collectionName = collectionArray[k];
-              collection = collectionObject[collectionName];
-              if (collection["noOfComments"] < 2){
-                allCollectionsCompleted = false;
 
-              }
-            }
-            console.log("ALL COLLECTIONS COMPLETED IS");
-            console.log(allCollectionsCompleted);
-            if (allCollectionsCompleted == true){
-
+          //If the collection we just updated has the max number of comments, we recheck to see if we have the desired comments for each collection.  If so, we exit the loop
+          if (collectionObject[collectionTitle]["noOfComments"] == commentsPerCollection){
+            collectionsComplete++;
+            if (collectionsComplete == collectionsToBeCompleted){
               enoughComments = true;
             }
           }
         }
       i++;  
       }
-
-      bodyString = '';
-
-      bodyString += '<div class="accordion" id="accordion1">';
-
       console.log("COLLECTION OBJECT IS");
       console.log(collectionObject);
 
+      //We will build the DOM to append to the recent-comments page with this string
+      bodyString = '';
+
+      bodyString += '<div class="accordion" id="accordion0">';
+
+      //Needed to uniquely label the different collapsible parts of the accordion (collapse0, collapse1 and so forth).  Incremented each time through the loop.
       collectionNumberTracker = 0; 
 
+      //Each high-level prop of collectionObject is the name of a collection
       for (collectionName in collectionObject){
 
+        //The title of collection that will be displayed
         collectionTitleString = '<h3>' + collectionName + '</h3>';
 
+        //Below is the Bootstrap markup for the accordion we display.  Most of it is taken from the documentation
         bodyString += '<div class="accordion-group">';
         bodyString += '<div class="accordion-heading">';
-        bodyString += '<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse' + collectionNumberTracker + '"">' + collectionTitleString + '</a></div>';
+        bodyString += '<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion0" href="#collapse' + collectionNumberTracker + '">' + collectionTitleString + '</a></div>';
 
         bodyString += '<div id="collapse' + collectionNumberTracker + '" class="accordion-body collapse in">';
 
-        collection = collectionObject[collectionName];
-        for (propName in collection){
+        //The value of each high-level property in collectionObject is the comments for each collection and the number of comments.  Here, we get all the comments to iterate through them
+        collectionComments = collectionObject[collectionName]["commentData"];
+        displayTitle = collectionObject[collectionName]["commentData"]["displayTitle"];
 
-            collectionProp = collection[propName];
-            for (m = 0; m < collectionProp.length; m++){
-              comment = collectionProp[m];
+            //Iterate through the comments for each collection
+            for (m = 0; m < collectionComments.length; m++){
+
+              //Get an individual comment
+              comment = collectionComments[m];
+
+              //Get the message (content of the comment)
               message = comment.message;
+
+              //Strip HTML markup out of message
               message = message.replace('<p>', '');
               message = message.replace('</p>', '');
 
+              //Get other information out of the comment
               author = comment.author.name;
               postDate = comment.createdAt;
+              threadLink = comment.thread.link;
+              threadTitle = comment.thread.title;
 
-              threadLink = aResponse.thread.link;
-              threadTitle = aResponse.thread.title;
+              //The comment and a link to where it occurred
+              postBody = "<a href='" + threadLink + "'>" + "<div class='recent-comment accordion-inner'>" + "<span class='comment-content'>" + message + "</span>"; 
 
-              if (threadTitle.split(" | ").length > 1){
-                threadArray = threadTitle.split ( " | ");
-                threadTitle = threadArray.pop() + " | " + threadArray.pop();
-                collectionTitle = threadArray.pop();
-              }
+              //Information about where the comment occurred
+              postContext =  "<strong class='commentContext'>" + displayTitle + "</strong>" + "</div>" + "</a>"  ;
 
-              postBody = "<a href='" + threadLink + "'>" + "<div class='recent-comment'>" + "<span class='comment-content'>" + message + "</span>"; 
-
-              postLink =  "<strong class='collectionName'>" + threadTitle + "</strong>" + "</div>" + "</a>"  ;
-
-              post = postBody + postLink; 
+              post = postBody + postContext; 
 
               bodyString += post;
-          } 
+          }
         
-        }
-        bodyString += '</div>'; 
+        bodyString += '</div></div>'; 
         collectionNumberTracker++;
       } 
-      bodyString += '</div></div>';   
+      bodyString += '</div>'; 
+      
       $('#recent-comments').append(bodyString);
     },
     error: function(parsedjson, textStatus, errorThrown){

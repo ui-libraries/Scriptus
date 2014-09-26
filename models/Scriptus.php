@@ -40,9 +40,9 @@ class Scriptus
     	return $this->transcription;
     }
 
-    public function getFileTitle() {
-        $this->file_title = metadata($this->file, array('Dublin Core', 'Title'));
-    	return $this->file_title;
+    public function getFileLink() {
+        $this->file_link = link_to($this->item, 'show', metadata($this->item, array('Dublin Core', 'Title')));
+    	return $this->file_link;
     }
 
     public function getItemLink() {
@@ -53,6 +53,11 @@ class Scriptus
     public function getItemTitle() {
         $this->item_title = metadata($this->item, array('Dublin Core', 'Title'));
         return $this->item_title;
+    }
+
+    public function getFileTitle() {
+        $this->file_title = metadata($this->file, array('Dublin Core', 'Title'));
+        return $this->file_title;
     }
 
     public function getIdlLink() {

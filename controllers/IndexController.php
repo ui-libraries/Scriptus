@@ -223,9 +223,13 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
                 $fileID = array_pop($urlArray); //file ID in URL
                 $itemID = array_pop($urlArray); //item ID in URL
                 $scriptus = new Scriptus($itemID, $fileID);
-                $thumbnailURL = $scriptus->getImageThumbnail();
 
-                $transcribeItem["image_url"] = $thumbnailURL;
+
+                $transcribeItem["image_url"] = $scriptus->getImageThumbnail();
+                $transcribeItem["collection_link"] = $scriptus->getCollectionLink();;
+                $transcribeItem["item_link"] = $scriptus->getItemLink();
+                $transcribeItem["file_title"] = $scriptus->getFileTitle();
+
                 $transcribeItem["transcription"] = $scriptus->getTranscription();
 
                 
