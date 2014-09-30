@@ -9,6 +9,7 @@
   border-radius: 10px;
   border-style: solid;
   margin-bottom: 10px;
+  margin-left: 10px;
   border-color: #C6A971;
   border-width: 1px;
   border-style: solid;
@@ -29,9 +30,7 @@
 
   }
 
-  .recent-transcription {
-    padding: 10px; background-color: #FFFFE0; border-radius: 20px; border-style: solid; margin-bottom: 10px;
-  }
+  
 
   #recent-comments {
     float: left; margin: 10px; width: 35%;
@@ -52,10 +51,7 @@
 
   .accordion-group {
     border: none;
-  }
-  .accordion-group h3 {
     background-color: rgba(0, 0, 0, 0.03);
-    padding: 5px;
   }
 
   #recent-transcriptions {
@@ -93,12 +89,38 @@
   }
 
   .transcription-breadcrumbs a {
-    font-size: .8em;
     font-weight: bold;
   }
 
   .transcription-item a {
     color: black;
+  }
+
+  #recent-comments h2 {
+    color: black;
+  }
+
+  #accordion0 .accordion-toggle {
+    padding: 5px;
+  }
+
+  .accordion-toggle h3 {
+    padding-left: 25px;
+    margin-bottom: 0px;
+  }
+
+  .accordion-group {
+    margin-bottom: 10px;
+  }
+
+  .expanded {
+    background: url(/omeka/themes/diyh/images/minusIcon.png) 5px 10px no-repeat;
+    background-size: 10px 10px;
+  }
+
+  .notExpanded {
+    background: url(/omeka/themes/diyh/images/plusIcon.png) 5px 10px no-repeat;
+    background-size: 10px 10px;
   }
 
 
@@ -150,6 +172,11 @@
 
 
 <script type="text/javascript">
+
+$( "#recent-transcriptions" ).click(function() {
+  $( "#book" ).toggleClass( "expanded").toggleClass("notExpanded");
+  console.log("PHHHH");
+});
 
 $(document).ready(function () {
 
@@ -262,10 +289,16 @@ $(document).ready(function () {
 
         //Below is the Bootstrap markup for the accordion we display.  Most of it is taken from the documentation
         bodyString += '<div class="accordion-group">';
-        bodyString += '<div class="accordion-heading">';
+        bodyString += '<div class="accordion-heading drewTest">';
         bodyString += '<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion0" href="#collapse' + collectionNumberTracker + '">' + collectionTitleString + '</a></div>';
 
-        bodyString += '<div id="collapse' + collectionNumberTracker + '" class="accordion-body collapse in">';
+        bodyString += '<div id="collapse' + collectionNumberTracker + '" class="accordion-body collapse ';
+
+        if (collectionNumberTracker == 0){
+          bodyString += 'in';
+        }
+
+        bodyString += '">';
 
         //The value of each high-level property in collectionObject is the comments for each collection and the number of comments.  Here, we get all the comments to iterate through them
         collectionComments = collectionObject[collectionName]["commentData"];
