@@ -114,7 +114,7 @@
   }
 
   .expanded {
-    background: url(/omeka/themes/diyh/images/minusIcon.png) 5px 10px no-repeat;
+    background: url(plugins/Scriptus/views/public/index/img/minusIcon.png) 5px 10px no-repeat;
     background-size: 10px 10px;
   }
 
@@ -128,55 +128,59 @@
 
 
 </style>
-
-<div id="primary">
-  <h1 class="page-title">Site Activity </h1>
-  <div id="content">
-    <div id="recent-comments">
-    <h2>Most recent comments</h2>
+<body>
+  <div id="primary">
+    <div id="content">
+      <div id="recent-comments">
+      <h2>Most recent comments</h2>
+        
+      <!--Most recent comments inserted via JavaScript-->
       
-    <!--Most recent comments inserted via JavaScript-->
-    
-    </div>
-    <div id="recent-transcriptions">
-       <h2>Most recent transcriptions</h2>
-      <?php //print_r($this->recentTranscriptions);
-      foreach ($this->recentTranscriptions as $transcriptionItem): ?>
-        <div class="transcription-item">
-          <?php /* <p>Link to page: <?php echo $transcriptionItem["URL_changed"] ?></p> 
-          <p>Collection name: <?php echo $transcriptionItem["collection_name"] ?></p>
-          <p> Username: <?php echo $transcriptionItem["username"] ?></p>
-          <p> Changed: <?php echo $transcriptionItem["time_changed"] ?></p> 
-          <p> Image URL: <?php echo $transcriptionItem["image_url"] ?></p> 
-          <p> Transcription: <?php echo snippet_by_word_count($transcriptionItem["transcription"], 10, '...') ?></p> */ ?>
+      </div>
+      <div id="recent-transcriptions">
+         <h2>Most recent transcriptions</h2>
+        <?php //print_r($this->recentTranscriptions);
+        foreach ($this->recentTranscriptions as $transcriptionItem): ?>
+          <div class="transcription-item">
+            <?php /* <p>Link to page: <?php echo $transcriptionItem["URL_changed"] ?></p> 
+            <p>Collection name: <?php echo $transcriptionItem["collection_name"] ?></p>
+            <p> Username: <?php echo $transcriptionItem["username"] ?></p>
+            <p> Changed: <?php echo $transcriptionItem["time_changed"] ?></p> 
+            <p> Image URL: <?php echo $transcriptionItem["image_url"] ?></p> 
+            <p> Transcription: <?php echo snippet_by_word_count($transcriptionItem["transcription"], 10, '...') ?></p> */ ?>
 
-           <a href="<?php echo $transcriptionItem["URL_changed"] ?>" class="transcriptionLink">
-            <img src="<?php echo $transcriptionItem["image_url"] ?>" /> 
+             <a href="<?php echo $transcriptionItem["URL_changed"] ?>" class="transcriptionLink">
+              <img src="<?php echo $transcriptionItem["image_url"] ?>" /> 
 
-            <div class="transcription-snippet">
-              <p> <?php echo snippet_by_word_count($transcriptionItem["transcription"], 10, '...') ?></p>
+              <div class="transcription-snippet">
+                <p> <?php echo snippet_by_word_count($transcriptionItem["transcription"], 10, '...') ?></p>
+              </div>
+             </a>
+
+            <div class="transcription-breadcrumbs">
+              <a href="<?php echo $transcriptionItem["URL_changed"] ?>"><?php echo $transcriptionItem["file_title"] ?></a> |
+              <?php echo $transcriptionItem["item_link"] ?> | 
+              <?php echo $transcriptionItem["collection_link"] ?>
             </div>
-           </a>
-
-          <div class="transcription-breadcrumbs">
-            <a href="<?php echo $transcriptionItem["URL_changed"] ?>"><?php echo $transcriptionItem["file_title"] ?></a> |
-            <?php echo $transcriptionItem["item_link"] ?> | 
-            <?php echo $transcriptionItem["collection_link"] ?>
+            
           </div>
-          
-        </div>
-      <?php endforeach; ?>
+        <?php endforeach; ?>
+      </div>
     </div>
   </div>
-</div>
-
+</body>
 
 <script type="text/javascript">
 
-$( "#recent-transcriptions" ).click(function() {
-  $( "#book" ).toggleClass( "expanded").toggleClass("notExpanded");
-  console.log("PHHHH");
+$("body").on("click", ".accordion-toggle", function() {
+  expandedSelection = $('.expanded');
+  $(this).toggleClass("expanded").toggleClass("notExpanded");
+  expandedSelection.removeClass("expanded");
+  expandedSelection.addClass("notExpanded");
+  
 });
+
+
 
 $(document).ready(function () {
 
@@ -215,9 +219,6 @@ $(document).ready(function () {
       for (var j = 0; j < collectionArray.length; j++){
         collectionObject[collectionArray[j]] = {commentData: [], noOfComments: 0};
       }
-
-      //The number of comments we're displaying for each collection
-      commentsPerCollection = 3;
 
       //When each collection has the above number of comments per collection, enoughComments should be true
       enoughComments = false;
@@ -289,8 +290,17 @@ $(document).ready(function () {
 
         //Below is the Bootstrap markup for the accordion we display.  Most of it is taken from the documentation
         bodyString += '<div class="accordion-group">';
-        bodyString += '<div class="accordion-heading drewTest">';
-        bodyString += '<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion0" href="#collapse' + collectionNumberTracker + '">' + collectionTitleString + '</a></div>';
+        bodyString += '<div class="accordion-heading">';
+        bodyString += '<a class="accordion-toggle';
+
+        if (collectionNumberTracker == 0){
+          bodyString += ' expanded';
+        }
+        else {
+          bodyString += ' notExpanded';
+        }
+
+        bodyString += '" data-toggle="collapse" data-parent="#accordion0" href="#collapse' + collectionNumberTracker + '">' + collectionTitleString + '</a></div>';
 
         bodyString += '<div id="collapse' + collectionNumberTracker + '" class="accordion-body collapse ';
 
