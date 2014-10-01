@@ -8,7 +8,7 @@
   background-color: #FFFFED;
   border-radius: 10px;
   border-style: solid;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   margin-left: 10px;
   border-color: #C6A971;
   border-width: 1px;
@@ -30,15 +30,14 @@
 
   }
 
-  
 
   #recent-comments {
-    float: left; margin: 10px; width: 35%;
+    float: left; width: 35%; margin: 10px;
   }
 
   #recent-comments h2 {
     padding: 0 8px 0 8px;
-
+    display: block;
   }
 
    .accordion-body {
@@ -73,6 +72,7 @@
 
   .comment-content {
     display: block;
+    font-size: 1.2em;
   }
 
   .page-title {
@@ -123,14 +123,35 @@
     background-size: 10px 10px;
   }
 
+  .author {
+    background-color: #B5651D;
+    color: white;
+    float: right;
+    padding: 3px;
+    border-radius: 5px;
+  }
 
+  .postDate {
+    background-color: #B5651D;
+    color: white;
+    float: left;
+    margin-right: 10px;
+    padding: 3px;
+    border-radius: 5px;
+  }
+
+  .commentContext {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
 
 
 
 </style>
 <body>
   <div id="primary">
-    <div id="content">
+    <div class="content">
+      <br><br>
       <div id="recent-comments">
       <h2>Most recent comments</h2>
         
@@ -166,11 +187,36 @@
           </div>
         <?php endforeach; ?>
       </div>
+      <div class="clear"></div>
     </div>
   </div>
 </body>
 
 <script type="text/javascript">
+
+function formatDate(date, fmt) {
+    function pad(value) {
+        return (value.toString().length < 2) ? '0' + value : value;
+    }
+    return fmt.replace(/%([a-zA-Z])/g, function (_, fmtCode) {
+        switch (fmtCode) {
+        case 'Y':
+            return date.getUTCFullYear();
+        case 'M':
+            return pad(date.getUTCMonth() + 1);
+        case 'd':
+            return pad(date.getUTCDate());
+        case 'H':
+            return pad(date.getUTCHours());
+        case 'm':
+            return pad(date.getUTCMinutes());
+        case 's':
+            return pad(date.getUTCSeconds());
+        default:
+            throw new Error('Unsupported format code: ' + fmtCode);
+        }
+    });
+}
 
 $("body").on("click", ".accordion-toggle", function() {
   expandedSelection = $('.expanded');
@@ -252,11 +298,11 @@ $(document).ready(function () {
         //Add comment to what we're going to display as long as we haven't reached the max number of comments for a collection
         if (collectionObject[collectionTitle]["noOfComments"] < commentsPerCollection){
 
+           //Add display title to comment data 
+          aResponse["displayTitle"] = displayTitle;
+
           //Add comment data to object that holds what we're going to display
           collectionObject[collectionTitle]["commentData"].push(aResponse);
-
-          //Add display title to comment data 
-          collectionObject[collectionTitle]["commentData"]["displayTitle"] = displayTitle;
 
           //Track number of comments added for each collection
           collectionObject[collectionTitle]["noOfComments"]++;
@@ -312,7 +358,7 @@ $(document).ready(function () {
 
         //The value of each high-level property in collectionObject is the comments for each collection and the number of comments.  Here, we get all the comments to iterate through them
         collectionComments = collectionObject[collectionName]["commentData"];
-        displayTitle = collectionObject[collectionName]["commentData"]["displayTitle"];
+
 
             //Iterate through the comments for each collection
             for (m = 0; m < collectionComments.length; m++){
@@ -330,14 +376,18 @@ $(document).ready(function () {
               //Get other information out of the comment
               author = comment.author.name;
               postDate = comment.createdAt;
+              postDate = postDate.replace('T', ', ');
               threadLink = comment.thread.link;
               threadTitle = comment.thread.title;
+              displayTitle = comment.displayTitle;
+
+              //postDate = formatDate(postDate, '%H:%m:%s');
 
               //The comment and a link to where it occurred
               postBody = "<a href='" + threadLink + "'>" + "<div class='recent-comment accordion-inner'>" + "<span class='comment-content'>" + message + "</span>"; 
 
               //Information about where the comment occurred
-              postContext =  "<strong class='commentContext'>" + displayTitle + "</strong>" + "</div>" + "</a>"  ;
+              postContext =  "<div class='commentContext'><strong>" + displayTitle + "</strong></div>" + '<div><div class="author">' + author + '</div>' + '<div class="postDate">' + postDate + '</div>' +"<div class='clear'></div></div></div>" + "</a>";
 
               post = postBody + postContext; 
 
