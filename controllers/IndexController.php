@@ -14,11 +14,15 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $this->transcription = $scriptus->getTranscription(); 
 
         $this->view->imageUrl = $scriptus->getImageUrl();                           
-        $this->view->file_title = $scriptus->getFileTitle();            
+        $this->view->file_title = $scriptus->getFileTitle();
+        $this->view->item_title = $scriptus->getItemTitle();              
         $this->view->item_link = $scriptus->getItemLink();
+        $this->view->collection_title = $scriptus->getCollectionTitle();
         $this->view->collection_link = $scriptus->getCollectionLink(); 
         $this->view->idl_link = $scriptus->getIdlLink(); 
-        $this->view->collguide_link = $scriptus->getCollguideLink();           
+
+        $this->view->collguide_link = $scriptus->getCollguideLink(); 
+           
 
         $this->view->form = $this->_buildForm();
 
@@ -62,6 +66,12 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $firstElement = $element[0]; //getElementTexts returns array, element[0] is first element
 
         $oldTranscription = $firstElement->text; 
+
+        //get collection name
+        $itemId = $this->getParam('item');
+        $fileId = $this->getParam('file');
+        $scriptus = new Scriptus($itemId, $fileId);
+        $collectionName = $scriptus->getCollectionTitle();
         
         //set newTranscription, which will be used at bottom to update the Scriptus_changes table    
         if ($oldTranscription){
@@ -70,7 +80,6 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         else {
             $newTranscription = 1;
         }
-
 
         //Update file with new transcription information
         $element = $file->getElement('Scriptus', 'Transcription');
@@ -84,8 +93,6 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         else {
             $statusText = '';
         }
-
-
 
         //update status based on text in transcription field
         $element = $file->getElement('Scriptus', 'Status');
@@ -144,13 +151,13 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         //Chop save off of end of URL
         $uri = substr($uri, 0, -5);
-
-        
+  
         $user = current_user();
 
         //Get username, or define as empty string if user isn't logged in -- this will be saved to Scriptus_changes
         if ($user){
             $username = $user->username;
+
         }
         else{
             $username = '';
@@ -162,9 +169,8 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         //Timestamp format YYYY-MM-DD HH:MM:SS
         $timestamp = date('Y-m-d H:i:s');
 
-
         //Insert information about change into Scriptus_changes
-        $sql = "insert into Scriptus_changes VALUES ('" . $uri . "', '" . $username . "', '" . $timestamp .  "', '" . $newTranscription . "')";
+        $sql = "insert into Scriptus_changes VALUES ('" . $uri . "', '" . $username . "', '" . $timestamp .  "', '" . $newTranscription .  "', '" . $collectionName . "')";
         $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
         $stmt->execute(array($uri, $user->username, $timestamp));
     
@@ -186,15 +192,15 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         //Add those transcriptions to recently transcribed, which we will add to the view below
 
         $recentlyTranscribed = array();
-        //Stop getting recent transcriptions when five is hit
-        while ($numberOfRecentTranscriptions < 5) {
+        
+        //Stop getting recent transcriptions when six is hit
+        while ($numberOfRecentTranscriptions < 6) {
 
             $row = $stmt->fetch();
 
             //A single transcription to be added to recentlyTranscribed
             $transcribeItem = array();
-          
-
+        
             $transcribeItem["URL_changed"] = $row["URL_changed"];
 
             //Determine if transcribed URL is already in list.  Not the prettiest way to do this
@@ -209,6 +215,21 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
                 $transcribeItem["username"] = $row["username"];
                 $transcribeItem["time_changed"] = $row["time_changed"];
 
+                $transcribeItem["collection_name"] = $row["collection_name"];
+
+                $urlArray = explode("/", $transcribeItem["URL_changed"]);
+                $fileID = array_pop($urlArray); //file ID in URL
+                $itemID = array_pop($urlArray); //item ID in URL
+                $scriptus = new Scriptus($itemID, $fileID);
+
+
+                $transcribeItem["image_url"] = $scriptus->getImageThumbnail();
+                $transcribeItem["collection_link"] = $scriptus->getCollectionLink();;
+                $transcribeItem["item_link"] = $scriptus->getItemLink();
+                $transcribeItem["file_title"] = $scriptus->getFileTitle();
+
+                $transcribeItem["transcription"] = $scriptus->getTranscription();
+
                 $numberOfRecentTranscriptions++;
 
                 array_push($recentlyTranscribed, $transcribeItem);
@@ -216,11 +237,82 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         }
 
+
         //add recent transcriptions to view
         $this->view->recentTranscriptions = $recentlyTranscribed;
     
     }
 
+    //Get the new transcription submissions in past months.
+    public function submissionstatsAction(){
+
+        $currentYear = date("Y");
+        $currentMonth = date("M");
+
+        //When this is 0, only the previous month is queried.  1 would include the last two months, 2 the last three, and so on.  Only months that are complete are queried (though that can be changed).
+        $monthsToQueryPastCurrentMonth = 0;
+
+        $submissionArray = array();
+
+        $db = get_db();
+
+        $collectionArray = array();
+        $collections = get_records('Collection');
+        set_loop_records('Collection', $collections);
+
+        foreach (loop('collections') as $collection){
+            $title = metadata('collection', array('Dublin Core', 'Title'));
+            array_push($collectionArray, $title);
+        }
+        
+        
+        $offset = $monthsToQueryPastCurrentMonth;
+
+        //When the offset reaches 0, the current month is being queried
+        while ($offset >= 0){
+
+            foreach ($collectionArray as $collection){
+
+                //Offset - 1 is the previous month.  Only months that are over are used in the report, so the previous month is the last month we query.
+                $time = mktime(0,0,0,date("m")-($offset-1),1,date("y"));
+                $date = date('Y-m', $time);
+
+                $time = mktime(0,0,0,date("m")-($offset),1,date("y"));
+                $datePrevMonth = date('Y-m', $time);
+
+                $sql = 'select * from Scriptus_changes where time_changed > "' . $datePrevMonth . '" and time_changed < "' . $date . '" and collection_name = "' . $collection . '" ORDER BY time_changed DESC';
+                
+                //print_r($sql);
+
+                $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
+                $stmt->execute();
+
+                $submissionItem = array();
+                $rowCount = 0;
+
+                $currentMonth = date("m")-$offset;
+
+                //TODO: Have it only count new transcriptions!!! Disabled right now to make it easier to see results
+                while ($row = $stmt->fetch()){
+                    if ($row["new_transcription"]==1){
+                        $rowCount++;
+                    }
+                }
+
+                $submissionItem["collection"] = $collection;
+                $submissionItem["date"] = $date;
+                $submissionItem["transcriptionCount"] = $rowCount;
+
+                array_push($submissionArray, $submissionItem);
+
+            }
+
+            $offset--;
+
+        }
+
+         $this->view->submissionStats = $submissionArray;
+    }
 
     private function _buildForm() {
         //create a new Omeka form
@@ -245,6 +337,4 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         return $this->form;
     }
-    
-
 }

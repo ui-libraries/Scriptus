@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-<title>DIY History</title>
+<title>DIY History | Transcribe | <?php echo $this->collection_title; ?> | <?php echo $this->item_title; ?> | <?php echo $this->file_title; ?></title>
 
 <?php 
 	echo js_tag('jquery-1.9.1'); 
@@ -32,7 +32,7 @@
 
 	   		<ul class="nav nav-tabs" role="tablist">
 	   		  <li class="active"><a href="#transcribe" role="tab" data-toggle="tab">Transcribe</a></li>
-	   		  <li><a href="#discuss" role="tab" data-toggle="tab">Discuss</a></li>
+	   		  <li id="discussTab"><a href="#discuss" id="discussLink" role="tab" data-toggle="tab">Discuss</a></li>
 	   		</ul>
 
 	   		<div class="tab-content">
@@ -102,6 +102,19 @@
 				classie.toggle( body, 'cbp-spmenu-push-toleft' );
 				classie.toggle( menuRight, 'cbp-spmenu-open' );			
 			};
+
+			//Loads discuss tab if user navigated from recent comments page
+			$(document).ready(function(){
+				var oldURL = document.referrer;
+				var URLArray = oldURL.split("/");
+				var endOfURL = URLArray.pop()
+				if (endOfURL == 'recent-comments'){ 
+					$('.active').removeClass('active');
+					$('#discuss').addClass('active');
+					$('#discussTab').addClass('active');
+				}
+
+			});
 
 			jQuery(function($){
 				$('#ImageID').smoothZoom({
