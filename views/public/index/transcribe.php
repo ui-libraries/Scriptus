@@ -105,15 +105,16 @@
 
 			//Loads discuss tab if user navigated from recent comments page
 			$(document).ready(function(){
-				var oldURL = document.referrer;
-				var URLArray = oldURL.split("/");
-				var endOfURL = URLArray.pop()
-				if (endOfURL == 'recent-comments'){ 
-					$('.active').removeClass('active');
-					$('#discuss').addClass('active');
-					$('#discussTab').addClass('active');
+				var URL = document.URL;
+				var URLArray = URL.split("?");
+				if (URLArray){
+					var endOfURL = URLArray.pop();
+					if (endOfURL == 'discussOpen=true'){ 
+						$('.active').removeClass('active');
+						$('#discuss').addClass('active');
+						$('#discussTab').addClass('active');
+					}
 				}
-
 			});
 
 			jQuery(function($){

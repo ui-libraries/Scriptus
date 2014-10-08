@@ -72,6 +72,8 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $fileId = $this->getParam('file');
         $scriptus = new Scriptus($itemId, $fileId);
         $collectionName = $scriptus->getCollectionTitle();
+        $itemName = $scriptus->getItemTitle();
+        $fileName = $scriptus->getFileTitle();
         
         //set newTranscription, which will be used at bottom to update the Scriptus_changes table    
         if ($oldTranscription){
@@ -170,7 +172,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $timestamp = date('Y-m-d H:i:s');
 
         //Insert information about change into Scriptus_changes
-        $sql = "insert into Scriptus_changes VALUES ('" . $uri . "', '" . $username . "', '" . $timestamp .  "', '" . $newTranscription .  "', '" . $collectionName . "')";
+        $sql = "insert into Scriptus_changes VALUES ('" . $uri . "', '" . $username . "', '" . $timestamp .  "', '" . $newTranscription .  "', '" . $collectionName . "', '" . $itemName  . "', '" . $fileName . "')"; 
         $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
         $stmt->execute(array($uri, $user->username, $timestamp));
     

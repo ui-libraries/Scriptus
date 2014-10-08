@@ -67,7 +67,7 @@
     margin-right: 10px;
     margin-bottom: 20px;
     padding: 10px;
-    height: 450px;
+    height: 440px;
   }
 
   .comment-content {
@@ -114,12 +114,12 @@
   }
 
   .expanded {
-    background: url(plugins/Scriptus/views/public/index/img/minusIcon.png) 5px 10px no-repeat;
+    background: url(themes/diyh/images/minusIcon.png) 5px 10px no-repeat;
     background-size: 10px 10px;
   }
 
   .notExpanded {
-    background: url(/omeka/themes/diyh/images/plusIcon.png) 5px 10px no-repeat;
+    background: url(themes/diyh/images/plusIcon.png) 5px 10px no-repeat;
     background-size: 10px 10px;
   }
 
@@ -155,7 +155,7 @@
 <body>
   <div id="primary">
     <div class="content">
-      <div class="header-clear"></div>
+      
       <div id="recent-comments">
       <h2>Most recent comments</h2>
         
@@ -198,29 +198,6 @@
 
 <script type="text/javascript">
 
-function formatDate(date, fmt) {
-    function pad(value) {
-        return (value.toString().length < 2) ? '0' + value : value;
-    }
-    return fmt.replace(/%([a-zA-Z])/g, function (_, fmtCode) {
-        switch (fmtCode) {
-        case 'Y':
-            return date.getUTCFullYear();
-        case 'M':
-            return pad(date.getUTCMonth() + 1);
-        case 'd':
-            return pad(date.getUTCDate());
-        case 'H':
-            return pad(date.getUTCHours());
-        case 'm':
-            return pad(date.getUTCMinutes());
-        case 's':
-            return pad(date.getUTCSeconds());
-        default:
-            throw new Error('Unsupported format code: ' + fmtCode);
-        }
-    });
-}
 
 $("body").on("click", ".accordion-toggle", function() {
   expandedSelection = $('.expanded');
@@ -234,7 +211,7 @@ $("body").on("click", ".accordion-toggle", function() {
 
 $(document).ready(function () {
 
-  //This JavaScript queries Disqus for the latest comments in order to display the number desired from each collection.  If the number desired from a given collection aren't present in the latest 100 comments, then only the number of comments that are present will appear.
+  //This JavaScript queries Disqus for the latest comments in order to display the number desired from each collection.  If the number desired from a given collection aren't present in the latest 100 comments, then only the number of comments that are present from that collection will appear.
 
 
   var disqusPublicKey = "jmgI7Iex4CKNqXPAVCq6d7gI8HISZRjx442VnEdhl0GDHgJJ20aheCkcmygqHwXX";
@@ -388,7 +365,7 @@ $(document).ready(function () {
               //postDate = formatDate(postDate, '%H:%m:%s');
 
               //The comment and a link to where it occurred
-              postBody = "<a href='" + threadLink + "'>" + "<div class='recent-comment accordion-inner'>" + "<span class='comment-content'>" + message + "</span>"; 
+              postBody = "<a href='" + threadLink + "?discussOpen=true'>" + "<div class='recent-comment accordion-inner'>" + "<span class='comment-content'>" + message + "</span>"; 
 
               //Information about where the comment occurred
               postContext =  "<div class='commentContext'><strong>" + displayTitle + "</strong></div>" + '<div><div class="author">' + author + '</div>' + '<div class="postDate">' + postDate + '</div>' +"<div class='clear'></div></div></div>" + "</a>";

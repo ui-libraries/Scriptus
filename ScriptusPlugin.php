@@ -40,14 +40,39 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
 
     public function filterGuestUserWidgets($widgets)
     {
-        //The above is just proof-of-concept filler in using filterGuestUserWidgets. 
-        $widget = array('label'=>'My Redundant Account');
-        $passwordUrl = url('guest-user/user/change-password');
+
+        $widget = array('label'=>'Most Recent Transcriptions');
         $html = "<ul>";
-        $html .= "<li><a href='$passwordUrl'>Redundant Change Password</a></li>";
+
+
+        $user = current_user();
+        $sql = "select * from Scriptus_changes where username = '" . $user->username . "'order by time_changed DESC limit 3;";
+        $db = get_db();
+        $result = $db->query($sql);
+
+        //The first row
+        while ($row = $result->fetch()){
+            $lastTranscribed = $row['URL_changed'];
+            $timeChanged = $row['time_changed'];
+            
+            $lastTranscribed = (string)$lastTranscribed;
+            $someLink = array('id'=>'transcribe',
+                        'uri'=>url('' . $lastTranscribed),
+                        'label' => 'Last transcribed');
+
+            $html .= "<li><a href='$lastTranscribed'>$timeChanged</a></li>"; 
+
+        }
+
+
+
         $html .= "</ul>";
         $widget['content'] = $html;
         $widgets[] = $widget;
+
+
+
+
         return $widgets;
     }
 
@@ -55,7 +80,7 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
     {  
         $db = $this->_db;
         print_r($db);
-        $sql = "CREATE TABLE IF NOT EXISTS `Scriptus_changes_test` (`URL_changed` text collate utf8_unicode_ci NOT NULL, `username` text collate utf8_unicode_ci, `time_changed` datetime NOT NULL, `new_transcription` boolean, `collection_name` text collate utf8_unicode_ci) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+        $sql = "CREATE TABLE IF NOT EXISTS `Scriptus_changes` (`URL_changed` text collate utf8_unicode_ci NOT NULL, `username` text collate utf8_unicode_ci, `time_changed` datetime NOT NULL, `new_transcription` boolean, `collection_name` text collate utf8_unicode_ci, `item_name` text collate utf8_unicode_ci, `file_name` text collate utf8_unicode_ci ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
         $db->query($sql);    
     }
 
