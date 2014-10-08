@@ -54,13 +54,14 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
         while ($row = $result->fetch()){
             $lastTranscribed = $row['URL_changed'];
             $timeChanged = $row['time_changed'];
+            $displayTitle = $row['file_name'] . ', ' . $row['item_name'];
             
             $lastTranscribed = (string)$lastTranscribed;
             $someLink = array('id'=>'transcribe',
                         'uri'=>url('' . $lastTranscribed),
                         'label' => 'Last transcribed');
 
-            $html .= "<li><a href='$lastTranscribed'>$timeChanged</a></li>"; 
+            $html .= "<li><a href='$lastTranscribed'>$displayTitle</a></li>"; 
 
         }
 
