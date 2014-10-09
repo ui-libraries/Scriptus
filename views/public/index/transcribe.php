@@ -21,11 +21,11 @@
 
 </head>
 
-	<body class="cbp-spmenu-push">	
+	<body class="menu-push">	
 
 		<img id="ImageID" src="<?php echo $this->imageUrl; ?>"/>	
 
-		<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
+		<nav class="menu menu-vertical menu-right" id="menu-s2">
 			
 	   		<a href="<?php echo WEB_ROOT; ?>" alt="Home"><span class="glyphicon glyphicon-home"></span>home</a>
 	   		<br /><br />
@@ -96,12 +96,12 @@
 		<script src="../../plugins/Scriptus/views/public/javascripts/classie.js"></script>
 		<script>
 			var 
-				menuRight = document.getElementById( 'cbp-spmenu-s2' ),							
+				menuRight = document.getElementById( 'menu-s2' ),							
 				body = document.body;
 
 			window.onload = function() {				
-				classie.toggle( body, 'cbp-spmenu-push-toleft' );
-				classie.toggle( menuRight, 'cbp-spmenu-open' );			
+				classie.toggle( body, 'menu-push-toleft' );
+				classie.toggle( menuRight, 'menu-open' );			
 			};
 
 			//Loads discuss tab if user navigated from recent comments page. discussOpen is the URL parameter used for this purpose
