@@ -50,6 +50,7 @@
 		   			    <ul class="dropdown-menu" role="menu">
 		   			      <li><a href="<?php echo $this->idl_link; ?>">digital collection</a></li>
 		   			      <li><a href="<?php echo $this->collguide_link; ?>">archival collection guide</a></li>
+		   			      <li><a href="<?php echo WEB_ROOT; ?>/tips">transcription tips</a></li>
 		   			    </ul>
 		   			</div>   			
 					<?php echo $this->form; 				
