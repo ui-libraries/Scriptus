@@ -103,7 +103,7 @@
 				classie.toggle( menuRight, 'cbp-spmenu-open' );			
 			};
 
-			//Loads discuss tab if user navigated from recent comments page
+			//Loads discuss tab if user navigated from recent comments page. discussOpen is the URL parameter used for this purpose
 			$(document).ready(function(){
 				var URL = document.URL;
 				var URLArray = URL.split("?");
