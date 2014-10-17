@@ -136,5 +136,17 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
                 )
             )
         ); 
+
+        $router->addRoute(
+            'sitetransitionemail',
+            new Zend_Controller_Router_Route(
+                'site-transition-email',
+                array(
+                    'module'       => 'scriptus',
+                    'controller'   => 'index',
+                    'action'       => 'sitetransitionemail',
+                )
+            )
+        ); 
     }
 }

@@ -155,8 +155,9 @@
 <body>
   <div id="primary">
     <div class="content">
-      
+      <br><br><br><br>
       <div id="recent-comments">
+
       <h2>Most recent comments</h2>
         
       <!--Most recent comments inserted via JavaScript-->
