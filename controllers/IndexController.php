@@ -183,66 +183,72 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
     //Get the most recent transcriptions from the database.  The view also makes a query to the Disqus API to get most recent comments
     public function recentcommentsAction(){
         //Get recent changes
-        $sql = "select * from Scriptus_changes order by time_changed DESC;";
+        $sql = "select * from Scriptus_changes_test order by time_changed DESC;";
         $db = get_db();
         $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
         $stmt->execute();
 
-        //Get five most recent transcriptions
-        $numberOfRecentTranscriptions = 0;
+        //The number of transcriptions that should be displayed
+        $numberOfDesiredTranscriptions = 6;
+
+        //The number of transcriptions currently retrieved
+        $numberOfRetrievedTranscriptions = 0;
 
         //Add those transcriptions to recently transcribed, which we will add to the view below
 
         $recentlyTranscribed = array();
-        
-        //Stop getting recent transcriptions when six is hit
-        while ($numberOfRecentTranscriptions < 6) {
 
-            $row = $stmt->fetch();
+      
+        //Stop getting recent transcriptions when number of desired transcriptions is hit
+        while ($numberOfRetrievedTranscriptions < $numberOfDesiredTranscriptions) {
+            if ($row = $stmt->fetch()){
 
-            //A single transcription to be added to recentlyTranscribed
-            $transcribeItem = array();
-        
-            $transcribeItem["URL_changed"] = $row["URL_changed"];
+                //A single transcription to be added to recentlyTranscribed
+                $transcribeItem = array();
+            
+                $transcribeItem["URL_changed"] = $row["URL_changed"];
 
-            //Determine if transcribed URL is already in list.  Not the prettiest way to do this
-            $saveItem = 1;
-            foreach($recentlyTranscribed as $recent){
-                if ($transcribeItem["URL_changed"] == $recent["URL_changed"]){
-                    $saveItem = 0;
+                //Determine if transcribed URL is already in list.  Not the prettiest way to do this
+                $saveItem = 1;
+                foreach($recentlyTranscribed as $recent){
+                    if ($transcribeItem["URL_changed"] == $recent["URL_changed"]){
+                        $saveItem = 0;
+                    }
+                }
+                //Add a transcription if the URL is not already in our array
+                if ($saveItem == 1){
+                    $transcribeItem["username"] = $row["username"];
+                    $transcribeItem["time_changed"] = $row["time_changed"];
+
+                    $transcribeItem["collection_name"] = $row["collection_name"];
+
+                    $urlArray = explode("/", $transcribeItem["URL_changed"]);
+                    $fileID = array_pop($urlArray); //file ID in URL
+                    $itemID = array_pop($urlArray); //item ID in URL
+                    $scriptus = new Scriptus($itemID, $fileID);
+
+
+                    $transcribeItem["image_url"] = $scriptus->getImageThumbnail();
+                    $transcribeItem["collection_link"] = $scriptus->getCollectionLink();;
+                    $transcribeItem["item_link"] = $scriptus->getItemLink();
+                    $transcribeItem["file_title"] = $scriptus->getFileTitle();
+
+                    $transcribeItem["transcription"] = $scriptus->getTranscription();
+
+                    $numberOfRetrievedTranscriptions++;
+
+                    array_push($recentlyTranscribed, $transcribeItem);
                 }
             }
-            //Add a transcription if the URL is not already in our array
-            if ($saveItem == 1){
-                $transcribeItem["username"] = $row["username"];
-                $transcribeItem["time_changed"] = $row["time_changed"];
-
-                $transcribeItem["collection_name"] = $row["collection_name"];
-
-                $urlArray = explode("/", $transcribeItem["URL_changed"]);
-                $fileID = array_pop($urlArray); //file ID in URL
-                $itemID = array_pop($urlArray); //item ID in URL
-                $scriptus = new Scriptus($itemID, $fileID);
-
-
-                $transcribeItem["image_url"] = $scriptus->getImageThumbnail();
-                $transcribeItem["collection_link"] = $scriptus->getCollectionLink();;
-                $transcribeItem["item_link"] = $scriptus->getItemLink();
-                $transcribeItem["file_title"] = $scriptus->getFileTitle();
-
-                $transcribeItem["transcription"] = $scriptus->getTranscription();
-
-                $numberOfRecentTranscriptions++;
-
-                array_push($recentlyTranscribed, $transcribeItem);
+            else {
+                break;
             }
-
         }
 
 
         //add recent transcriptions to view
         $this->view->recentTranscriptions = $recentlyTranscribed;
-    
+        
     }
 
     //Get the new transcription submissions in past months.
@@ -314,6 +320,10 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         }
 
          $this->view->submissionStats = $submissionArray;
+    }
+
+    public function sitetransitionemailAction(){
+        echo("HITS CONTROLLER");
     }
 
     private function _buildForm() {
