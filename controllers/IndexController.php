@@ -182,9 +182,55 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
     //Get the most recent transcriptions from the database.  The view also makes a query to the Disqus API to get most recent comments
     public function recentcommentsAction(){
-        //Get recent changes
-        $sql = "select * from Scriptus_changes order by time_changed DESC;";
+
+
+        $user = current_user();
         $db = get_db();
+
+        if ($user){ 
+            //Change this to prepared statement
+            $sql = "select * from Scriptus_changes where username = '" . $user->username . "'order by time_changed DESC limit 3;";
+            $stmt = $db->query($sql);
+
+            //The number of user transcriptions that should be displayed
+            $numberOfDesiredUserTranscriptions = 3;
+
+            //The number of user transcriptions that should be displayed
+            $numberOfRetrievedUserTranscriptions = 0;
+
+            $recentlyTranscribed = array();
+
+            while ($numberOfRetrievedUserTranscriptions < $numberOfDesiredUserTranscriptions) {
+
+                if ($row = $stmt->fetch()){
+
+                    $transcribeItem = array();
+
+                    $lastTranscribed = $row['URL_changed'];
+                    $transcribeItem['last_transcribed']  = (string)$lastTranscribed;
+                    $transcribeItem['time_changed'] = $row['time_changed'];
+                    $transcribeItem['display_title'] = $row['file_name'] . ', ' . $row['item_name'];
+       
+
+                    array_push($recentlyTranscribed, $transcribeItem);
+
+                    $numberOfRetrievedUserTranscriptions++;
+                }
+
+                else {
+                    break;
+                }
+
+            }
+
+             $this->view->recentUserTranscriptions = $recentlyTranscribed;
+
+             print_r($recentlyTranscribed);
+
+        }
+
+        //Get recent changes globally
+        $sql = "select * from Scriptus_changes order by time_changed DESC;";
         $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
         $stmt->execute();
 

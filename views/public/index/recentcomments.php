@@ -31,8 +31,8 @@
   }
 
 
-  #recent-comments {
-    float: left; width: 35%; margin: 10px;
+  #recent-comments, #update-account {
+    float: left; width: 35%; margin-right: 5px; padding: 5px;
   }
 
   #recent-comments h2 {
@@ -53,9 +53,11 @@
     background-color: rgba(0, 0, 0, 0.03);
   }
 
-  #recent-transcriptions {
-    float: right; margin: 10px; width: 60%;
+  #recent-transcriptions, #user-transcriptions {
+    float: right; width: 60%; margin-left: 5px; padding: 5px;
   }
+
+
 
   .transcription-item {
     position: relative;
@@ -149,20 +151,52 @@
     height:40px;
   }
 
+  .clearfix {
+    clear: both;
+  }
 
 
 </style>
 <body>
   <div id="primary">
     <div class="content">
-      <br><br><br><br>
+      <br><br><br><br><br><br>
+
+
+      <?php $user = current_user(); ?>
+      <?php if ($user): ?>
+      <div id="update-account">
+
+        <h2>Update account</h2> 
+
+        <a href="http://diyhistory.ecn.uiowa.edu/omeka/guest-user/user/update-account">Update account information and password</a>
+
+        </div>
+
+        <div id="user-transcriptions">
+
+        <h2>Your transcriptions</h2>
+    
+          <ul>
+          <?php foreach ($this->recentUserTranscriptions as $transcriptionItem): ?>
+
+            <li><a href="<?php echo $transcriptionItem['last_transcribed'] ?>"><?php echo $transcriptionItem['display_title'] ?></a></li>
+
+          <?php endforeach; ?>
+        </ul>
+
+        </div>  
+
+        <div class="clearfix"></div>
+
+      <?php endif; ?>
+
       <div id="recent-comments">
 
       <h2>Most recent comments</h2>
-        
-      <!--Most recent comments inserted via JavaScript-->
       
       </div>
+
       <div id="recent-transcriptions">
          <h2>Most recent transcriptions</h2>
         <?php //print_r($this->recentTranscriptions);
