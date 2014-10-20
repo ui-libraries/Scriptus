@@ -160,7 +160,7 @@
 <body>
   <div id="primary">
     <div class="content">
-      <br><br><br><br><br><br>
+      <div class="section-title"></div>
 
 
       <?php $user = current_user(); ?>
