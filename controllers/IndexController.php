@@ -225,8 +225,6 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
              $this->view->recentUserTranscriptions = $recentlyTranscribed;
 
-             print_r($recentlyTranscribed);
-
         }
 
         //Get recent changes globally

@@ -32,7 +32,7 @@
 
 
   #recent-comments, #update-account {
-    float: left; width: 35%; margin-right: 5px; padding: 5px;
+    float: left; width: 35%; margin-right: 5px; padding: 10px;
   }
 
   #recent-comments h2 {
@@ -54,7 +54,7 @@
   }
 
   #recent-transcriptions, #user-transcriptions {
-    float: right; width: 60%; margin-left: 5px; padding: 5px;
+    float: left; width: 60%; margin-left: 5px; padding: 5px;
   }
 
 
@@ -153,6 +153,12 @@
 
   .clearfix {
     clear: both;
+  }
+
+  @media (max-width: 915px) {
+  #user-transcriptions, #update-account, #recent-comments, #recent-transcriptions {
+    width: 95%;
+    margin: auto;
   }
 
 
