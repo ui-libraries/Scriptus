@@ -32,7 +32,7 @@
 
 
   #recent-comments, #update-account {
-    float: left; width: 35%; margin-right: 5px; padding: 10px;
+    float: left; width: 35%; margin-right: 5px; padding: 5px; 
   }
 
   #recent-comments h2 {
@@ -181,7 +181,7 @@
 
         <div id="user-transcriptions">
 
-        <h2>Your transcriptions</h2>
+        <h2>Your recent transcriptions</h2>
     
           <ul>
           <?php foreach ($this->recentUserTranscriptions as $transcriptionItem): ?>
