@@ -30,7 +30,7 @@ body {
 	border-right-style: ridge;
     border-width: 5px;	
     border-color: #BDBDBD;
-    overflow-y: scroll;
+   
 
 }
 
@@ -67,7 +67,8 @@ body {
 	height: 100%;
 	top: 0;
 	z-index: 1000;
-	overflow: hidden;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 
@@ -96,7 +97,7 @@ body {
 }
 
 #egrip{
-	right:-5px;
+	right: -5px;
      top:50%;
      z-index: 3000;
 
