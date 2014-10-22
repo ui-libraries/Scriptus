@@ -26,7 +26,7 @@
 		height: '100%',									//Height of the view area [480, '480px', '100%']
 
 		initial_ZOOM: '',							//Initial zoom level to start with (in percentage) [100]
-		initial_POSITION: '150 1400',						//Initial location to be focused in pixel value [150,150 or 150 150]
+		initial_POSITION: '',						//Initial location to be focused in pixel value [150,150 or 150 150]
 
 		animation_SMOOTHNESS: 5.5,					//Ease or smoothness of all movements [Any number from 0]				
 		animation_SPEED_ZOOM: 5.5,					//Speed of zoom movements [Any number from 0] 
