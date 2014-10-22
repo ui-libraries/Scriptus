@@ -22,8 +22,8 @@
 	******************************************************************************/
 	var defaults = {
 		
-		width: '',									//Width of the view area [480, '480px', '100%']
-		height: '',									//Height of the view area [480, '480px', '100%']
+		width: '2000',									//Width of the view area [480, '480px', '100%']
+		height: '100%',									//Height of the view area [480, '480px', '100%']
 
 		initial_ZOOM: '',							//Initial zoom level to start with (in percentage) [100]
 		initial_POSITION: '',						//Initial location to be focused in pixel value [150,150 or 150 150]
@@ -42,7 +42,7 @@
 		pan_LIMIT_BOUNDARY: false,					//To allow/restrict moving the image beyond boundaries
 		pan_REVERSE: false,
 		
-		reset_ALIGN_TO: 'center center', 			//Image can be aligned to desired position on reset. Example: 'Top Left'
+		reset_ALIGN_TO: 'left', 				//Image can be aligned to desired position on reset. Example: 'Top Left'
 		reset_TO_ZOOM_MIN: true,					//How it should behave if zoom_MIN value set and while clicking reset button, 
 
 		button_SIZE: 18,							//Button width and height (in pixels)
@@ -52,7 +52,7 @@
 		button_BG_TRANSPARENCY: 55,					//Background transparency (in percentage)
 		button_AUTO_HIDE: false,					//To hide the button set when mouse moved outside the view area
 		button_AUTO_HIDE_DELAY: 1,					//Auto hide delay time in seconds
-		button_ALIGN: 'left bottom',					//Button set can be aligned to any side or center
+		button_ALIGN: 'right right',				//Button set can be aligned to any side or center
 		button_MARGIN: 10,							//Space between button set and view port's edge
 		button_ROUND_CORNERS: true,					//To enable disable roundness of button corner
 		
@@ -63,7 +63,7 @@
 		mouse_DOUBLE_CLICK: true,					//Enable/disable zoom action with double click
 
 		background_COLOR: '#000000',				//Background colour of image container
-		border_SIZE: 1,								//Border size of view area
+		border_SIZE: 0,								//Border size of view area
 		border_COLOR: '#000000',					//Border color of view area
 		border_TRANSPARENCY: 10,					//Border transparency of view area
 		
@@ -79,7 +79,7 @@
 		
 		use_3D_Transform: true,						//To enable / disable Hardware acceleration on webkit browsers
 		
-		responsive: false,							//To enable / disable Responsive / fluid layout
+		responsive: true,							//To enable / disable Responsive / fluid layout
 		responsive_maintain_ratio: true,			//To maintain view area width/height ratio or not
 		max_WIDTH: '',								//Maximum allowed width of view area (helpful when 'width' parameter set with % and need limit)
 		max_HEIGHT: ''								//Maximum allowed height of view area (helpful when 'height' parameter set with % and need limit)

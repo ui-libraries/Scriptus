@@ -8,6 +8,7 @@
 
 <?php 
 	echo js_tag('jquery-1.9.1'); 
+	echo js_tag('jquery-ui.min');
 	echo js_tag('jquery.smoothZoom'); 	
 	echo js_tag('modernizr.custom');
 ?>
@@ -16,6 +17,7 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-hover-dropdown/2.0.10/bootstrap-hover-dropdown.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 
 <link href="../../plugins/Scriptus/views/public/css/component.css" rel="stylesheet"> 
 
@@ -24,8 +26,9 @@
 	<body class="menu-push">	
 
 		<img id="ImageID" src="<?php echo $this->imageUrl; ?>"/>	
-
-		<nav class="menu menu-vertical menu-right" id="menu-s2">
+		
+		<nav class="menu menu-vertical menu-left" id="menu-s2">
+			<div class="ui-resizable-handle ui-resizable-e" id="egrip"></div>
 			
 	   		<a href="<?php echo WEB_ROOT; ?>" alt="Home"><span class="glyphicon glyphicon-home"></span>home</a>
 	   		<br /><br />
@@ -91,18 +94,12 @@
 			</div>
 		</nav>	
 
+	
+
 
 		<!-- Classie - class helper functions by @desandro https://github.com/desandro/classie -->
 		<script src="../../plugins/Scriptus/views/public/javascripts/classie.js"></script>
 		<script>
-			var 
-				menuRight = document.getElementById( 'menu-s2' ),							
-				body = document.body;
-
-			window.onload = function() {				
-				classie.toggle( body, 'menu-push-toleft' );
-				classie.toggle( menuRight, 'menu-open' );			
-			};
 
 			//Loads discuss tab if user navigated from recent comments page. discussOpen is the URL parameter used for this purpose
 			$(document).ready(function(){
@@ -177,7 +174,16 @@
 					  	btn.button("reset"); // reset button after login callback returns
 					  });	  
 					})				
+			});			
+
+					
+			$('#menu-s2').resizable({
+			    handles: {			        
+			        'e': '#egrip',
+
+			    }
 			});
+
 		</script>
 
 	</body>

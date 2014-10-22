@@ -1,12 +1,16 @@
 
 html {		
-	height: 100%;	
+	height: 100%;
+	width: 100%;
+	background-color: black;
 }
 	
 body {
 	width: 100%;
 	height: 100%;
-	margin: 0px;		
+	margin: 0px;
+	background-color: black;
+		
 }
 
 .smooth_zoom_preloader {
@@ -20,12 +24,14 @@ body {
 /* General styles for all menus */
 .menu {
 	background: #F2F2F2;
-	position: fixed;
+	position: fixed !important;
+	width: 25%;
 	padding: 10px;
-	border-left-style: ridge;
+	border-right-style: ridge;
     border-width: 5px;	
     border-color: #BDBDBD;
-    overflow-y: scroll;
+   
+
 }
 
 .menu a {
@@ -57,126 +63,17 @@ body {
 /* Orientation-dependent styles for the content of the menu */
 
 .menu-vertical {
-	width: 25%;
+	
 	height: 100%;
 	top: 0;
 	z-index: 1000;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
-
-.menu-horizontal {
-	width: 100%;
-	height: 150px;
-	left: 0;
-	z-index: 1000;
-	overflow: hidden;
-}
-
-.menu-horizontal h3 {
-	height: 100%;
-	width: 20%;
-	float: left;
-}
-
-/* Vertical menu that slides from the left or right */
-
-.menu-left {
-	left: -240px;
-}
-
-.menu-right {
-	right: -240px;
-}
 
 .menu-left.menu-open {
 	left: 0px;
-}
-
-.menu-right.menu-open {
-	right: 0px;
-}
-
-/* Horizontal menu that slides from the top or bottom */
-
-.menu-top {
-	top: -150px;
-}
-
-.menu-bottom {
-	bottom: -150px;
-}
-
-.menu-top.menu-open {
-	top: 0px;
-}
-
-.menu-bottom.menu-open {
-	bottom: 0px;
-}
-
-/* Push classes applied to the body */
-
-.menu-push {
-	overflow-x: hidden;
-	position: relative;
-	left: 0;
-}
-
-.menu-push-toright {
-	left: 240px;
-}
-
-.menu-push-toleft {
-	left: -140px;
-}
-
-/* Transitions */
-
-.menu,
-.menu-push {
-	-webkit-transition: all 0.3s ease;
-	-moz-transition: all 0.3s ease;
-	transition: all 0.3s ease;
-}
-
-/* Example media queries */
-
-@media screen and (max-width: 55.1875em){
-
-	.menu-horizontal {
-		font-size: 75%;
-		height: 110px;
-	}
-
-	.menu-top {
-		top: -110px;
-	}
-
-	.menu-bottom {
-		bottom: -110px;
-	}
-
-}
-
-@media screen and (max-height: 26.375em){
-
-	.menu-vertical {
-		font-size: 90%;
-		width: 190px;
-	}
-
-	.menu-left,
-	.menu-push-toleft {
-		left: -190px;
-	}
-
-	.menu-right {
-		right: -190px;
-	}
-
-	.menu-push-toright {
-		left: 190px;
-	}
 }
 
 #transcribebox {
@@ -189,4 +86,19 @@ body {
 
 #save-button {
 	margin-bottom: 10px;
+}
+
+
+#nwgrip, #negrip, #swgrip, #segrip, #ngrip, #egrip, #sgrip, #wgrip {
+    width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border: 1px solid #000000;
+}
+
+#egrip{
+	right: -5px;
+     top:50%;
+     z-index: 3000;
+
 }
