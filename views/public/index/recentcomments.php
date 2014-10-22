@@ -155,10 +155,12 @@
     clear: both;
   }
 
+
   @media (max-width: 915px) {
   #user-transcriptions, #update-account, #recent-comments, #recent-transcriptions {
     width: 95%;
     margin: auto;
+    margin-bottom: 10px;
   }
 
 
