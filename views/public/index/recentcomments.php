@@ -161,6 +161,7 @@
   @media (max-width: 767px) {
  .section-title {
     margin-top: 0px;
+  }
  }
     
 
@@ -170,7 +171,7 @@
     margin: auto;
     margin-bottom: 10px;
   }
-
+}
 
 </style>
 <body>
@@ -185,7 +186,7 @@
 
         <h2>Update account</h2> 
 
-        <a href="http://diyhistory.ecn.uiowa.edu/omeka/guest-user/user/update-account">Update account information and password</a>
+        <a href="<?php echo WEB_ROOT;?>/guest-user/user/update-account">Update account information and password</a>
 
         </div>
 
