@@ -25,12 +25,12 @@
 
 	<body class="menu-push">	
 
-		<img id="ImageID" src="<?php echo $this->imageUrl; ?>"/>	
+		<img id="ImageID" src="<?php echo $this->imageUrl; ?>" alt=''/>	
 		
 		<nav class="menu menu-vertical menu-left" id="menu-s2">
 			<div class="ui-resizable-handle ui-resizable-e" id="egrip"></div>
 			
-	   		<a href="<?php echo WEB_ROOT; ?>" alt="Home"><span class="glyphicon glyphicon-home"></span>home</a>
+	   		<a href="<?php echo WEB_ROOT; ?>"><span class="glyphicon glyphicon-home"></span>home</a>
 	   		<br /><br />
 
 	   		<ul class="nav nav-tabs" role="tablist">

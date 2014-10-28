@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 
 <?php echo head(array('title'=> 'recentComments')); ?>
 
@@ -35,7 +34,6 @@
 
   }
 
-
   #recent-comments, #update-account {
     float: left; width: 35%; margin-right: 5px; padding: 5px; 
   }
@@ -45,24 +43,9 @@
     display: block;
   }
 
-   .accordion-body {
-  padding: 0 8px 0 8px;
-}
-
-  #accordion0 {
-    padding-top: 0px;
-  }
-
-  .accordion-group {
-    border: none;
-    background-color: rgba(0, 0, 0, 0.03);
-  }
-
   #recent-transcriptions, #user-transcriptions {
     float: left; width: 60%; margin-left: 5px; padding: 5px;
   }
-
-
 
   .transcription-item {
     position: relative;
@@ -118,6 +101,20 @@
     margin-bottom: 10px;
   }
 
+   .accordion-body {
+  padding: 0 8px 0 8px;
+}
+
+  #accordion0 {
+    padding-top: 0px;
+  }
+
+  .accordion-group {
+    border: none;
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+
+
   .expanded {
     background: url(themes/diyh/images/minusIcon.png) 5px 10px no-repeat;
     background-size: 10px 10px;
@@ -158,8 +155,12 @@
     clear: both;
   }
 
+  .section-title {
+    margin-top: 95px;
+  }
+
   @media (max-width: 767px) {
- .section-title {
+ .content .section-title {
     margin-top: 0px;
   }
  }
@@ -171,10 +172,13 @@
     margin: auto;
     margin-bottom: 10px;
   }
+  .section-title {
+    margin-top: 30px;
+  }
 }
 
 </style>
-<body>
+
   <div id="primary">
     <div class="content">
       <div class="section-title"></div>
@@ -246,7 +250,8 @@
       <div class="clear"></div>
     </div>
   </div>
-</body>
+
+</div>
 
 <script type="text/javascript">
 
