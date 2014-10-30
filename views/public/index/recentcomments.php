@@ -156,25 +156,27 @@
   }
 
   .section-title {
-    margin-top: 95px;
+    margin-top: 140px;
   }
 
-  @media (max-width: 767px) {
- .content .section-title {
-    margin-top: 0px;
-  }
- }
-    
+  
 
-  @media (max-width: 915px) {
+  @media (max-width: 959px) {
   #user-transcriptions, #update-account, #recent-comments, #recent-transcriptions {
     width: 95%;
     margin: auto;
     margin-bottom: 10px;
   }
   .section-title {
-    margin-top: 30px;
+    margin-top: 120px;
   }
+
+  @media (max-width: 767px) {
+    .section-title {
+      margin-top: -15px;
+    }
+  }
+
 }
 
 </style>
