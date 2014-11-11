@@ -148,5 +148,19 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
                 )
             )
         ); 
+
+        $router->addRoute(
+            'colllectionstats',
+            new Zend_Controller_Router_Route(
+                'collection-stats',
+                array(
+                    'module'       => 'scriptus',
+                    'controller'   => 'index',
+                    'action'       => 'collectionstats',
+                )
+            )
+        ); 
+
+
     }
 }
