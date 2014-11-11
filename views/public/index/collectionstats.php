@@ -5,21 +5,20 @@
   <link href="../omeka/plugins/Scriptus/views/public/css/component.css" rel="stylesheet">
   <?php echo head(array('title'=> 'recentComments')); ?>
 </head>
-
+<br><br><br><br><br><br>
 <div id="primary">
-<h1>New Submission Stats</h1>
+<h1>New Collection Stats</h1>
   <div id="content">
    
     <div id="recent-transcriptions" style="float: left; margin: 10px;">
-       <h2>Most recent transcriptions</h2>
-       
-      
-      <?php foreach ($this->submissionStats as $submissionMonth): ?>
+
+      <?php foreach ($this->collectionStats as $collection): ?>
         
-        <p>Collection: <b><?php echo $submissionMonth["collection"] ?></b></p>
-        <p>Date: <?php echo $submissionMonth["date"] ?></p>
-        <p> Transcription count:<b> <?php echo $submissionMonth["transcriptionCount"] ?></b></p>
+        <p>Collection: <b><?php echo $collection["title"] ?></b></p>
+        <p>Number Of Files: <?php echo $collection["noOfFiles"] ?></p>
+
       <?php endforeach; ?>
+       
     </div>
   </div>
 </div>

@@ -261,6 +261,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         $db = get_db();
 
+
         $collectionArray = array();
         $collections = get_records('Collection');
         set_loop_records('Collection', $collections);
@@ -269,7 +270,8 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
             $title = metadata('collection', array('Dublin Core', 'Title'));
             array_push($collectionArray, $title);
         }
-        
+
+       
         
         $offset = $monthsToQueryPastCurrentMonth;
 
@@ -317,6 +319,53 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         }
 
          $this->view->submissionStats = $submissionArray;
+    }
+
+    public function collectionstatsAction(){
+
+        $db = get_db();
+
+        $collectionArray = array();
+        $collections = get_records('Collection');
+
+        set_loop_records('Collection', $collections);
+
+        foreach (loop('collections') as $collection){
+
+            $title = metadata('collection', array('Dublin Core', 'Title'));
+            
+            $noOfFilesInCollection = 0;
+
+            $items = $this->_helper->db->getTable('Item')->findBy(
+            array('collection' => $collection->id));
+
+            set_loop_records('Item', $items);
+
+            foreach (loop('items') as $item){
+
+
+                 //get all the parent item's files
+                $files = $item->getFiles();
+
+                //get the number of files associated with the item
+                $fileLength = count($files);
+
+                $noOfFilesInCollection += $fileLength; 
+
+            }
+
+
+            $collectionItem = array();
+
+            $collectionItem["title"] = $title;
+            $collectionItem["noOfFiles"] = $noOfFilesInCollection;
+
+            array_push($collectionArray, $collectionItem);
+
+        }
+        
+        $this->view->collectionStats = $collectionArray;
+
     }
 
 
