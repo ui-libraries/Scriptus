@@ -1,6 +1,6 @@
 
 <?php echo head(array('title'=> 'recentComments')); ?>
-
+<link href="http://fonts.googleapis.com/css?family=Vollkorn" rel="stylesheet" type="text/css">
 <style>
 
   a {
@@ -155,11 +155,30 @@
     clear: both;
   }
 
-  .section-title {
-    margin-top: 140px;
+  .section-title h1 {
+    font-family: 'Vollkorn';
+    font-size: 30pt;
   }
 
-  
+  .section-title, .login-link {
+    text-align: center;
+    margin-bottom: 5px;
+  }
+
+  .login-link {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    border-width: 2px;
+    border-style: ridge;
+    padding: 3px;
+    border-color: rgba(0, 0, 0, 0.03);
+  }
+
+   .login-link a {
+    color: blue;
+
+   }
+
 
   @media (max-width: 959px) {
   #user-transcriptions, #update-account, #recent-comments, #recent-transcriptions {
@@ -167,15 +186,14 @@
     margin: auto;
     margin-bottom: 10px;
   }
-  .section-title {
-    margin-top: 120px;
+
+  @media (max-width: 480px) {
+  .section-title h1 {
+    font-size: 28pt;
+  }
   }
 
-  @media (max-width: 767px) {
-    .section-title {
-      margin-top: -15px;
-    }
-  }
+  
 
 }
 
@@ -183,11 +201,11 @@
 
   <div id="primary">
     <div class="content">
-      <div class="section-title"></div>
-
-
+      <div class="section-title"><h1>Your dashboard</h1></div>
       <?php $user = current_user(); ?>
-      <?php if ($user): ?>
+      <?php if (!$user): ?>
+        <div class="login-link"><a href="<?php echo WEB_ROOT;?>/users/login">Login </a>to see your recent transcriptions and view account options.</div>
+      <?php else: ?>
       <div id="update-account">
 
         <h2>Update account</h2> 
@@ -283,8 +301,6 @@ $(document).ready(function () {
     data: { api_key: disqusPublicKey, forum : disqusShortname},
     dataType: 'jsonp',
     success: function (result) {
-    console.log("RESULT IS");
-    console.log(result);
 
       //The collection object will have the collections and then the associated comments stored in it
       collectionObject = {};
@@ -357,8 +373,6 @@ $(document).ready(function () {
         }
       i++;  
       }
-      console.log("COLLECTION OBJECT IS");
-      console.log(collectionObject);
 
       //We will build the DOM to append to the recent-comments page with this string
       bodyString = '';

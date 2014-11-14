@@ -114,13 +114,13 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
         );   
 
         $router->addRoute(
-            'recentcomments',
+            'dasboard',
             new Zend_Controller_Router_Route(
-                'recent-comments',
+                'dashboard',
                 array(
                     'module'       => 'scriptus',
                     'controller'   => 'index',
-                    'action'       => 'recentcomments',
+                    'action'       => 'dashboard',
                 )
             )
         ); 
@@ -160,7 +160,6 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
                 )
             )
         ); 
-
 
     }
 }

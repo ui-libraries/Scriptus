@@ -171,17 +171,20 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         //Timestamp format YYYY-MM-DD HH:MM:SS
         $timestamp = date('Y-m-d H:i:s');
 
+
+
         //Insert information about change into Scriptus_changes
         $sql = "insert into Scriptus_changes VALUES ('" . $uri . "', '" . $username . "', '" . $timestamp .  "', '" . $newTranscription .  "', '" . $collectionName . "', '" . $itemName  . "', '" . $fileName . "')"; 
+       
         $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
-        $stmt->execute(array($uri, $user->username, $timestamp));
-    
+        $stmt->execute();
+       
 
 
     }
 
     //Get the most recent transcriptions from the database.  The view also makes a query to the Disqus API to get most recent comments
-    public function recentcommentsAction(){
+    public function dashboardAction(){
 
         $user = current_user();
         $db = get_db();
