@@ -148,7 +148,8 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         //save item
         $item->save();    
 
-        /*save URL last edited by user*/
+
+         /*save URL last edited by user*/
         $uri = getenv("REQUEST_URI");
 
         //Chop save off of end of URL
@@ -171,16 +172,10 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         //Timestamp format YYYY-MM-DD HH:MM:SS
         $timestamp = date('Y-m-d H:i:s');
 
-
-
-        //Insert information about change into Scriptus_changes
-        $sql = "insert into Scriptus_changes VALUES ('" . $uri . "', '" . $username . "', '" . $timestamp .  "', '" . $newTranscription .  "', '" . $collectionName . "', '" . $itemName  . "', '" . $fileName . "')"; 
-       
+        $sql = "insert into Scriptus_changes VALUES (?, ?, ?, ?, ?, ?, ?)"; 
         $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
-        $stmt->execute();
+        $stmt->execute(array($uri, $username, $timestamp, $newTranscription, $collectionName, $itemName , $fileName));
        
-
-
     }
 
     //Get the most recent transcriptions from the database.  The view also makes a query to the Disqus API to get most recent comments

@@ -129,6 +129,8 @@
 							'transcription'	: $('#transcribebox').val()
 						};
 
+
+
 						// process the form
 						$.ajax({
 							type 		: 'POST', // define the type of HTTP verb we want to use (POST for our form)
@@ -140,15 +142,26 @@
 							// using the done promise callback
 							.done(function(data) {
 
-								// log data to the console so we can see
+								//log data to the console so we can see
 								//console.log(data); 
+								//console.log("DONE HIT");
 
 								// here we will handle errors and validation messages
+							})
+							.fail(function(request, error) {
+								//console.log("FAIL HIT");
+								//console.log("ERROR IS:");
+								//console.log(error);
+								//console.log(request.responseText)
 							});
+
+							
 
 						// stop the form from submitting the normal way and refreshing the page
 						event.preventDefault();
 					});
+
+					
 
 					/* simulates async login activity */
 					var doLogin = function(ms,cb) {
