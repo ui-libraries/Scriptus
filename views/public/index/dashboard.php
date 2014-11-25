@@ -1,6 +1,6 @@
 
 <?php echo head(array('title'=> 'recentComments')); ?>
-<link href="http://fonts.googleapis.com/css?family=Vollkorn" rel="stylesheet" type="text/css">
+
 <style>
 
   a {
@@ -181,16 +181,16 @@
 
 
   @media (max-width: 959px) {
-  #user-transcriptions, #update-account, #recent-comments, #recent-transcriptions {
-    width: 95%;
-    margin: auto;
-    margin-bottom: 10px;
+    #user-transcriptions, #update-account, #recent-comments, #recent-transcriptions {
+      width: 95%;
+      margin: auto;
+      margin-bottom: 10px;
+    }
   }
-
   @media (max-width: 480px) {
-  .section-title h1 {
-    font-size: 28pt;
-  }
+    .section-title h1 {
+      font-size: 28pt;
+    }
   }
 
   
