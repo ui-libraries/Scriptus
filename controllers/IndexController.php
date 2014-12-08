@@ -65,8 +65,6 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $element = $file->getElementTexts('Scriptus', 'Transcription');
         $firstElement = $element[0]; //getElementTexts returns array, element[0] is first element
 
-        $oldTranscription = $firstElement->text; 
-
         //get collection name
         $itemId = $this->getParam('item');
         $fileId = $this->getParam('file');
@@ -74,6 +72,8 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $collectionName = $scriptus->getCollectionTitle();
         $itemName = $scriptus->getItemTitle();
         $fileName = $scriptus->getFileTitle();
+
+        $oldTranscription = $firstElement->text; 
         
         //set newTranscription, which will be used at bottom to update the Scriptus_changes table    
         if ($oldTranscription){
@@ -275,8 +275,8 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
                     $transcribeItem["image_url"] = $scriptus->getImageThumbnail();
                     $transcribeItem["collection_link"] = $scriptus->getCollectionLink();;
                     $transcribeItem["item_link"] = $scriptus->getItemLink();
+                    $transcribeItem["item_title"] = $scriptus->getItemTitle();
                     $transcribeItem["file_title"] = $scriptus->getFileTitle();
-
                     $transcribeItem["transcription"] = $scriptus->getTranscription();
 
                     $numberOfRetrievedTranscriptions++;

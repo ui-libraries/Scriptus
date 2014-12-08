@@ -20,7 +20,12 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 
 <link href="../../plugins/Scriptus/views/public/css/component.css" rel="stylesheet"> 
-
+<style>
+.tab-content label {
+	visibility: hidden;
+	position: absolute;
+}
+</style>
 </head>
 
 	<body class="menu-push">	
@@ -58,6 +63,8 @@
 		   			</div>   			
 					<?php echo $this->form; 				
 					?>
+					<label for="save-button">Save transcription</label> 
+					<label for="transcribebox">Enter transcription here</label>
 
 					<?php if (isset($this->paginationUrls['prev'])): ?>
 						<a><button type="submit" class="btn btn-xs" onClick="parent.location='<?php echo html_escape($this->paginationUrls['prev']); ?>'">prev</button></a>

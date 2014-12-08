@@ -251,7 +251,7 @@
             <p> Transcription: <?php echo snippet_by_word_count($transcriptionItem["transcription"], 10, '...') ?></p> */ ?>
 
              <a href="<?php echo $transcriptionItem["URL_changed"] ?>" class="transcriptionLink">
-              <img src="<?php echo $transcriptionItem["image_url"] ?>" /> 
+              <img src="<?php echo $transcriptionItem["image_url"] ?>" alt="<?php echo $transcriptionItem["file_title"] ?>,a part of <?php echo $transcriptionItem["item_title"] ?>" /> 
 
               <div class="transcription-snippet">
                 <p> <?php echo snippet_by_word_count($transcriptionItem["transcription"], 10, '...') ?></p>
