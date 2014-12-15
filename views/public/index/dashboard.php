@@ -306,7 +306,7 @@ $(document).ready(function () {
       collectionObject = {};
 
       //All the collections currently tracked.  Update as necessary.
-      collectionArray = ["Pioneer Lives", "Iowa Women’s Lives: Letters and Diaries", "Szathmary Culinary Manuscripts and Cookbooks", "Building the Transcontinental Railroad", "Nile Kinnick Collection", "Civil War Diaries and Letters"];
+      collectionArray = ["Pioneer Lives", "Iowa Women’s Lives: Letters and Diaries", "Szathmary Culinary Manuscripts and Cookbooks", "Building the Transcontinental Railroad", "Nile Kinnick Collection", "Civil War Diaries and Letters", "World War I Diaries and Letters", "World War II Diaries and Letters"];
 
       //The number of comments we're displaying for each collection
       commentsPerCollection = 3;
