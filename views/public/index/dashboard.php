@@ -156,7 +156,6 @@
   }
 
   .section-title h1 {
-    font-family: 'Vollkorn';
     font-size: 30pt;
   }
 
