@@ -126,7 +126,7 @@
   }
 
   .author {
-    background-color: #B5651D;
+    background-color: #854a16;
     color: white;
     float: right;
     padding: 3px;
@@ -134,7 +134,7 @@
   }
 
   .postDate {
-    background-color: #B5651D;
+    background-color: #854a16;
     color: white;
     float: left;
     margin-right: 10px;
