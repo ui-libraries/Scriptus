@@ -404,10 +404,13 @@ $(document).ready(function () {
         bodyString += '<div id="collapse' + collectionNumberTracker + '" class="accordion-body collapse ';
 
         if (collectionNumberTracker == 0){
-          bodyString += 'in';
+          bodyString += 'in" aria-expanded="true"';
+        }
+        else {
+          bodyString += 'aria-expanded="false"';
         }
 
-        bodyString += '">';
+        bodyString += ' >';
 
         //The value of each high-level property in collectionObject is the comments for each collection and the number of comments.  Here, we get all the comments to iterate through them
         collectionComments = collectionObject[collectionName]["commentData"];
@@ -445,6 +448,12 @@ $(document).ready(function () {
               post = postBody + postContext; 
 
               bodyString += post;
+          }
+          if (collectionComments.length == 0){
+            //The accordion requires content to function when there are no comments in a collection
+
+            //Create hidden content
+            bodyString += '<span class="hidden">filler</span>'
           }
         
         bodyString += '</div></div>'; 

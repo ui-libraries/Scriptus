@@ -25,6 +25,14 @@
 	visibility: hidden;
 	position: absolute;
 }
+
+#egrip {
+	background-image: url('../../themes/diyh/images/resize.png');
+	width: 21px;
+	height: 54px;
+	right: 0px;
+}
+
 </style>
 </head>
 
