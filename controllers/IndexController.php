@@ -6,6 +6,12 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
     public function transcribeAction()
     {
 
+        $user = current_user();
+
+        if (!$user) {
+            $this->_redirect(WEB_ROOT.'/users/login');
+        }
+        
         $itemId = $this->getParam('item');
         $fileId = $this->getParam('file');
 
@@ -53,6 +59,39 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
      public function saveAction() 
      {        
+
+
+         /*save URL last edited by user*/
+        $uri = getenv("REQUEST_URI");
+
+        //Chop save off of end of URL
+        $uri = substr($uri, 0, -5);
+  
+        $user = current_user();
+
+        //Get username, or define as empty string if user isn't logged in -- this will be saved to Scriptus_changes
+        if ($user){
+            $username = $user->username;
+
+        }
+        else{
+            $username = '';
+        }
+
+        //Get database
+        $db = get_db();
+
+        //Timestamp format YYYY-MM-DD HH:MM:SS
+        $timestamp = date('Y-m-d H:i:s');
+
+
+
+
+        $sql = "insert into Scriptus_changes VALUES (?, ?, ?, null, null, null, null)"; 
+        $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
+        $stmt->execute(array($uri, $username, $timestamp));
+
+
         //get the record based on URL param
         $fileId = $this->getParam('file');
         $file = get_record_by_id('file', $fileId);
@@ -93,7 +132,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
             $statusText = 'Started';
         }
         else {
-            $statusText = '';
+            $statusText = 'Not Started';
         }
 
         //update status based on text in transcription field
@@ -149,32 +188,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $item->save();    
 
 
-         /*save URL last edited by user*/
-        $uri = getenv("REQUEST_URI");
-
-        //Chop save off of end of URL
-        $uri = substr($uri, 0, -5);
-  
-        $user = current_user();
-
-        //Get username, or define as empty string if user isn't logged in -- this will be saved to Scriptus_changes
-        if ($user){
-            $username = $user->username;
-
-        }
-        else{
-            $username = '';
-        }
-
-        //Get database
-        $db = get_db();
-
-        //Timestamp format YYYY-MM-DD HH:MM:SS
-        $timestamp = date('Y-m-d H:i:s');
-
-        $sql = "insert into Scriptus_changes VALUES (?, ?, ?, ?, ?, ?, ?)"; 
-        $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
-        $stmt->execute(array($uri, $username, $timestamp, $newTranscription, $collectionName, $itemName , $fileName));
+        
        
     }
 
