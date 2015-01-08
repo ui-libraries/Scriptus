@@ -9,7 +9,8 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $user = current_user();
         
         if (!$user) {
-            $this->_redirect(WEB_ROOT.'/users/login');
+            $_SESSION["referredFromTranscribe"] = substr($this->getRequest()->getRequestUri(),strlen($this->getRequest()->getBaseUrl()));
+            $this->_redirect(WEB_ROOT.'/guest-user/user/login');
         }
         
         $itemId = $this->getParam('item');
