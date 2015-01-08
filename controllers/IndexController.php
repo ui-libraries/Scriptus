@@ -7,7 +7,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
     {
 
         $user = current_user();
-
+        
         if (!$user) {
             $this->_redirect(WEB_ROOT.'/users/login');
         }
@@ -60,15 +60,24 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
      public function saveAction() 
      {        
 
+        //get the posted transcription data       
+        $request = new Zend_Controller_Request_Http();
+        $transcription = $request->getPost('transcription');    
+
+        
+        if (!$request->isPost()){
+            throw new Exception('Request must be POST.');
+        }
+
+        if (!($transcription)){
+            throw new Exception('transcription nonexistent');
+        }
 
         //get the record based on URL param
         $fileId = $this->getParam('file');
         $file = get_record_by_id('file', $fileId);
 
-        //get the posted transcription data       
-        $request = new Zend_Controller_Request_Http();
-        $transcription = $request->getPost('transcription');        
-
+    
         //check if there was old transcription data (this is used for analytics purposes)
         $element = $file->getElementTexts('Scriptus', 'Transcription');
         $firstElement = $element[0]; //getElementTexts returns array, element[0] is first element
@@ -127,11 +136,12 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         //iterate through files, tracking the number started with $numberStarted.  
         foreach($files as $file){
-            
-            $status = $file->getElementTexts('Scriptus', 'Status');
-            $status = $status[0];
-            if (($status->text == 'Started') || ($status->text == 'Needs Review') || ($status->text == 'Completed')){
-                $numberStarted++;
+            if (isset($file)){
+                $status = $file->getElementTexts('Scriptus', 'Status');
+                $status = $status[0];
+                if (($status->text == 'Started') || ($status->text == 'Needs Review') || ($status->text == 'Completed')){
+                    $numberStarted++;
+                }
             }
         }
 
@@ -185,9 +195,6 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $sql = "insert into Scriptus_changes VALUES (?, ?, ?, ?, ?, ?, ?)"; 
         $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
         $stmt->execute(array($uri, $username, $timestamp, $newTranscription, $collectionName, $itemName , $fileName));
-
-
-
         
        
     }
