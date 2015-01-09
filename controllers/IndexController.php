@@ -260,10 +260,25 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         //The number of transcriptions currently retrieved
         $numberOfRetrievedTranscriptions = 0;
 
+
+        //Get an array of private IDs for items so that we can ignore these private items for our recent transcriptions list
+        $arrayOfPrivateIDs = array();
+        $sqlToGetPrivateItems = "select * from items where public = 0;";
+        $privateItemResults = $db->query($sqlToGetPrivateItems);
+
+        while ($row = $privateItemResults->fetch()){
+            $id = $row["id"];
+            array_push($arrayOfPrivateIDs, $id);
+        }
+
+        //print_r($arrayOfPrivateIDs);
+        //exit();
+
+
+
         //Add those transcriptions to recently transcribed, which we will add to the view below
 
         $recentlyTranscribed = array();
-
       
         //Stop getting recent transcriptions when number of desired transcriptions is hit
         while ($numberOfRetrievedTranscriptions < $numberOfDesiredTranscriptions) {
@@ -291,6 +306,12 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
                     $urlArray = explode("/", $transcribeItem["URL_changed"]);
                     $fileID = array_pop($urlArray); //file ID in URL
                     $itemID = array_pop($urlArray); //item ID in URL
+
+
+                    if (in_array($itemID, $arrayOfPrivateIDs)){
+                        continue;
+                    }
+
                     $scriptus = new Scriptus($itemID, $fileID);
 
 

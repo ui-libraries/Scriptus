@@ -203,7 +203,7 @@
       <div class="section-title"><h1>Your dashboard</h1></div>
       <?php $user = current_user(); ?>
       <?php if (!$user): ?>
-        <div class="login-link"><a href="<?php echo WEB_ROOT;?>/users/login">Login </a>to see your recent transcriptions and view account options.</div>
+        <div class="login-link"><a href="<?php echo WEB_ROOT;?>/guest-user/user/login">Login </a>to see your recent transcriptions and view account options.</div>
       <?php else: ?>
       <div id="update-account">
 
