@@ -271,10 +271,6 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
             array_push($arrayOfPrivateIDs, $id);
         }
 
-        //print_r($arrayOfPrivateIDs);
-        //exit();
-
-
 
         //Add those transcriptions to recently transcribed, which we will add to the view below
 
@@ -307,7 +303,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
                     $fileID = array_pop($urlArray); //file ID in URL
                     $itemID = array_pop($urlArray); //item ID in URL
 
-
+                    //Skip item if private
                     if (in_array($itemID, $arrayOfPrivateIDs)){
                         continue;
                     }

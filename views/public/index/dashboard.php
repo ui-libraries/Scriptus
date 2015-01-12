@@ -433,9 +433,13 @@ $(document).ready(function () {
               author = comment.author.name;
               postDate = comment.createdAt;
               postDate = postDate.replace('T', ', ');
-              threadLink = comment.thread.link;
               threadTitle = comment.thread.title;
               displayTitle = comment.displayTitle;
+
+              threadLink = comment.thread.link;
+              threadArray = threadLink.split("?");
+              threadLink = threadArray[0];
+
 
               //postDate = formatDate(postDate, '%H:%m:%s');
 

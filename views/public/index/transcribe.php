@@ -91,6 +91,11 @@
 				<div data-toggle="tab" class="tab-pane" id="discuss">
 					<div id="disqus_thread"></div>
 					<script type="text/javascript">
+						var url = window.location.href;   
+						var temp = new Array();  
+						temp = url.split('?');                            
+						disqus_url = temp[0];
+
 					    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
 					    var disqus_shortname = 'diyh'; // required: replace example with your forum shortname
 
