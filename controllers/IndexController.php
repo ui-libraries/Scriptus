@@ -81,7 +81,13 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
     
         //check if there was old transcription data (this is used for analytics purposes)
         $element = $file->getElementTexts('Scriptus', 'Transcription');
-        $firstElement = $element[0]; //getElementTexts returns array, element[0] is first element
+        if(isset($element[0])) {
+            $firstElement = $element[0];
+        } else {
+            $element[0] = '';
+            $firstElement = $element[0];
+            $firstElement->text = '';
+        }; //getElementTexts returns array, element[0] is first element
 
         //get collection name
         $itemId = $this->getParam('item');
