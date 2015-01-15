@@ -75,15 +75,15 @@
 					<label for="transcribebox">Enter transcription here</label>
 
 					<?php if (isset($this->paginationUrls['prev'])): ?>
-						<a><button type="submit" class="btn btn-xs" onClick="parent.location='<?php echo html_escape($this->paginationUrls['prev']); ?>'">prev</button></a>
-					<?php else: ?>
-						<button type="submit" class="btn btn-xs">prev</button>
+						<a><button type="submit" class="btn btn-xs" onClick="parent.location='<?php echo html_escape($this->paginationUrls['prev']); ?>'">prev</button></a>	
+					<?php else: ?>	
+						<em>Beginning of item</em>					
 					<?php endif; ?>
 
 					<?php if (isset($this->paginationUrls['next'])): ?>
 						<a><button type="submit" class="btn btn-xs" onClick="parent.location='<?php echo html_escape($this->paginationUrls['next']); ?>'">next</button></a>
 					<?php else: ?>
-						<button type="submit" class="btn btn-xs">next</button>
+						<em>End of item</em>
 					<?php endif; ?>
 
 				</div>
