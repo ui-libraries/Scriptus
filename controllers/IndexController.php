@@ -461,4 +461,89 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         return $this->form;
     }
+
+    public function statusfixAction(){
+
+        $db = get_db();
+        $db2 = get_db();
+
+        $sql = "SELECT * from element_texts where record_type = 'File'and element_id = 137 group by record_id";
+        $results = $db->query($sql)->fetchAll();
+
+        $count = 0;
+        $innerCount = 0; 
+        foreach ($results as $singleResult){
+ 
+
+            $currentRecordId = $singleResult["record_id"];
+            $currentId = $singleResult["id"];
+
+            $sql = "DELETE from element_texts where element_id = 137 and record_id = " . $currentRecordId;
+            $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
+            $stmt->execute();
+            
+            $sql2 = "SELECT text from element_texts where element_id = 136 and record_id = " . $currentRecordId; 
+            $textResult = $db2->query($sql2);
+            $transcriptionArray = $textResult->fetch();
+            $transcription = $transcriptionArray["text"];
+
+
+            //print_r("SQL IS");
+            //print_r($sql);
+            //print_r("<br><br>");
+
+            //print_r("TRANSCRIPTION IS");
+            //print_r($transcription);
+            //print_r("<br><br>");
+            
+          
+            $sql = "insert into element_texts VALUES (?, ?, ?, ?, ?, ?)"; 
+            $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
+
+            if (($transcription != null) || ($transcription != '') || ($transcription != false)){
+                
+                $stmt->execute(array($currentId, $currentRecordId, 'File', 137, 0, 'Started'));
+                print_r("STARTED");
+                print_r("<br><br>");
+            }
+            else {
+
+                $stmt->execute(array($currentId, $currentRecordId, 'File', 137, 0, 'Not Started'));
+                print_r("NOT STARTED");
+                print_r("<br><br>");
+            }
+            
+            $count++;
+
+            /*
+            $currentRecordId = $singleResult["record_id"];
+            if (isset($oldRecordId)){
+                if ($currentRecordId == $oldRecordId){
+                    $sql = "DELETE from element_texts where id = " . $oldId;
+                    $stmt = new Zend_Db_Statement_Mysqli($db, $sql);
+                    $stmt->execute();
+                }
+                else {
+                    if ($count < 5){
+                        echo "CURRENT RECORD ID IS";
+                        echo $currentRecordId;
+                        echo "OLD RECORD ID IS"; 
+                        echo $oldRecordId;
+                        echo "<br><br>";
+                    }
+                }
+            }
+
+            $oldId = $singleResult["id"];
+            $oldRecordId = $singleResult["record_id"];
+            $count++;*/
+        }
+    
+        echo "NOUS AVONS FINI";
+        echo "COUNT IS";
+        echo $count;
+        /*echo "INNER COUNT IS";
+        echo $innerCount;*/
+    
+    }
 }
