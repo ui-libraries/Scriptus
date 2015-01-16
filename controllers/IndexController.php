@@ -467,7 +467,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $db = get_db();
         $db2 = get_db();
 
-        $sql = "SELECT * from element_texts where record_type = 'File'and element_id = 137 group by record_id";
+        $sql = "select *, COUNT(*) from element_texts where record_type = 'File'and element_id = 137 group by record_id having COUNT(*) > 1";
         $results = $db->query($sql)->fetchAll();
 
         $count = 0;
