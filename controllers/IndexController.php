@@ -445,13 +445,22 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $this->form = new Omeka_Form;         
         $this->form->setMethod('post'); 
 
-        $transcriptionArea = new Zend_Form_Element_Textarea('transcribebox');  
+        $transcriptionArea = new Zend_Form_Element_Textarea('transcribebox');
 
-        $transcriptionArea  ->setRequired(true)       
+        if ($user) {
+            $transcriptionArea  ->setRequired(true)       
+                            ->setValue($this->transcription)
+                            ->setAttrib('class', 'col-xs-12')                          
+                            ->setAttrib('class', 'form-control');
+        } else {
+            $transcriptionArea  ->setRequired(true)       
                             ->setValue($this->transcription)
                             ->setAttrib('class', 'col-xs-12')
+                            ->setAttrib('readonly', 'true')
                             ->setAttrib('class', 'form-control');
-        
+            
+        }   
+                
         $this->form->addElement($transcriptionArea);
 
         $save = new Zend_Form_Element_Submit('save');
