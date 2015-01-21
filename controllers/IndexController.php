@@ -5,13 +5,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         
     public function transcribeAction()
     {
-
-        $user = current_user();
-        
-        if (!$user) {
-            $_SESSION["referredFromTranscribe"] = substr($this->getRequest()->getRequestUri(),strlen($this->getRequest()->getBaseUrl()));
-            $this->_redirect(WEB_ROOT.'/guest-user/user/login');
-        }
+    
         
         $itemId = $this->getParam('item');
         $fileId = $this->getParam('file');
@@ -445,6 +439,8 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
 
     private function _buildForm() {
+
+        $user = current_user();
         //create a new Omeka form
         $this->form = new Omeka_Form;         
         $this->form->setMethod('post'); 
@@ -463,8 +459,23 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $save->setAttrib('class', 'btn btn-primary');
         $save->setAttrib('data-loading-text', "Saving...");
         $save->setAttrib('id', 'save-button');
-        $this->form->addElement($save);
+
+        $login = new Zend_Form_Element_Submit('login');
+        $login ->setLabel('Login to transcribe');
+        $login->setAttrib('class', 'btn btn-danger');
+        $login->setAttrib('onclick', "window.location.href = 'http://diyhistory.lib.uiowa.edu/users/login';");
+        $login->setAttrib('id', 'save-button');
+
+        if ($user) {
+            $this->form->addElement($save);
+        } else {
+            $this->form->addElement($login);
+            
+        }        
 
         return $this->form;
     }
+
+
 }
+
