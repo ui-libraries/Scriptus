@@ -34,6 +34,17 @@
 }
 
 </style>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-783364-57', 'auto');
+  ga('send', 'pageview');
+
+</script>
 </head>
 
 	<body class="menu-push">	
@@ -75,15 +86,15 @@
 					<label for="transcribebox">Enter transcription here</label>
 
 					<?php if (isset($this->paginationUrls['prev'])): ?>
-						<a><button type="submit" class="btn btn-xs" onClick="parent.location='<?php echo html_escape($this->paginationUrls['prev']); ?>'">prev</button></a>	
-					<?php else: ?>	
-						<em>Beginning of item</em>					
+						<a><button type="submit" class="btn btn-xs" onClick="parent.location='<?php echo html_escape($this->paginationUrls['prev']); ?>'">prev</button></a>
+					<?php else: ?>
+						<button type="submit" class="btn btn-xs">prev</button>
 					<?php endif; ?>
 
 					<?php if (isset($this->paginationUrls['next'])): ?>
 						<a><button type="submit" class="btn btn-xs" onClick="parent.location='<?php echo html_escape($this->paginationUrls['next']); ?>'">next</button></a>
 					<?php else: ?>
-						<em>End of item</em>
+						<button type="submit" class="btn btn-xs">next</button>
 					<?php endif; ?>
 
 				</div>

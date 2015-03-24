@@ -233,7 +233,7 @@
 
       <div id="recent-comments">
 
-      <h2>Most recent comments</h2>
+      <!-- <h2>Most recent comments</h2> -->
       
       </div>
 
@@ -340,7 +340,7 @@ $(document).ready(function () {
         //The format of a title is DIY History | Transcribe | Collection Name | Item Name | File Name.
         //If the title fits that format, split the string on the '|' character and then pop the last two items off of the resulting array to format a title for the user.
         //If the title doesn't fit that format, then we avoid performing array operations on a non-array with the if statement.  
-        if (threadTitle.split(" | ").length > 1){
+        if (threadTitle.split(" | ").length >= 5){
           threadArray = threadTitle.split ( " | ");
 
           //Title we display to the user

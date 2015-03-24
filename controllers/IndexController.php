@@ -470,7 +470,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $save->setAttrib('id', 'save-button');
 
         $login = new Zend_Form_Element_Submit('login');
-        $login ->setLabel('Login to transcribe');
+        $login ->setLabel('Sign in to transcribe');
         $login->setAttrib('class', 'btn btn-danger');
         $login->setAttrib('onclick', "window.location.href = 'http://diyhistory.lib.uiowa.edu/users/login';");
         $login->setAttrib('id', 'save-button');
