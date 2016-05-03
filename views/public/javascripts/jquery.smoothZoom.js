@@ -22,8 +22,8 @@
 	******************************************************************************/
 	var defaults = {
 		
-		width: '2000',									//Width of the view area [480, '480px', '100%']
-		height: '100%',									//Height of the view area [480, '480px', '100%']
+		width: '',									//Width of the view area [480, '480px', '100%']
+		height: '',									//Height of the view area [480, '480px', '100%']
 
 		initial_ZOOM: '',							//Initial zoom level to start with (in percentage) [100]
 		initial_POSITION: '',						//Initial location to be focused in pixel value [150,150 or 150 150]

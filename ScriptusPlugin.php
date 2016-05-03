@@ -111,7 +111,19 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
                     'action'       => 'save',
                 
 )            )
-        );   
+        );
+
+        $router->addRoute(
+            'translate',
+            new Zend_Controller_Router_Route(
+                'transcribe/:item/:file/translate',
+                array(
+                    'module'       => 'scriptus',
+                    'controller'   => 'index',
+                    'action'       => 'translate',
+                
+)            )
+        );    
 
         $router->addRoute(
             'dasboard',

@@ -296,7 +296,7 @@ $(document).ready(function () {
   $.ajax({
     type: 'GET',
     /*the related=thread URL parameter below is necessary for the query to return links to the posts.  The second URL paramter, limit 100, is the max we can get back.  */
-    url: "http://disqus.com/api/3.0/forums/listPosts.jsonp?related=thread&limit=100",
+    url: "https://disqus.com/api/3.0/forums/listPosts.jsonp?related=thread&limit=100",
     data: { api_key: disqusPublicKey, forum : disqusShortname},
     dataType: 'jsonp',
     success: function (result) {
@@ -305,7 +305,7 @@ $(document).ready(function () {
       collectionObject = {};
 
       //All the collections currently tracked.  Update as necessary.
-      collectionArray = ["Pioneer Lives", "Iowa Women’s Lives: Letters and Diaries", "Szathmary Culinary Manuscripts and Cookbooks", "Building the Transcontinental Railroad", "Nile Kinnick Collection", "Civil War Diaries and Letters", "World War I Diaries and Letters", "World War II Diaries and Letters"];
+      collectionArray = ["Museum of Natural History Egg Cards", "Pioneer Lives", "Iowa Women’s Lives: Letters and Diaries", "Szathmary Culinary Manuscripts and Cookbooks", "Building the Transcontinental Railroad", "Nile Kinnick Collection", "Civil War Diaries and Letters", "World War I Diaries and Letters", "World War II Diaries and Letters"];
 
       //The number of comments we're displaying for each collection
       commentsPerCollection = 3;

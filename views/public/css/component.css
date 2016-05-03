@@ -80,11 +80,19 @@ body {
 	margin-bottom: 10px;
 }
 
+#translatebox {
+	margin-bottom: 10px;
+}
+
 .nav-tabs {
 	margin-bottom: 10px;
 }
 
 #save-button {
+	margin-bottom: 10px;
+}
+
+#save-translation-button {
 	margin-bottom: 10px;
 }
 

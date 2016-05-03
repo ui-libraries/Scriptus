@@ -12,9 +12,12 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         $scriptus = new Scriptus($itemId, $fileId);
 
-        $this->transcription = $scriptus->getTranscription(); 
+        $this->transcription = $scriptus->getTranscription();
+        $this->view->transcription = $scriptus->getTranscription();
+        $this->translation = $scriptus->getTranslation();
 
-        $this->view->imageUrl = $scriptus->getImageUrl();                           
+        $this->view->imageUrl = $scriptus->getImageUrl();
+        $this->view->smallerImageUrl = $scriptus->getSmallerImageUrl();                            
         $this->view->file_title = $scriptus->getFileTitle();
         $this->view->item_title = $scriptus->getItemTitle();              
         $this->view->item_link = $scriptus->getItemLink();
@@ -26,6 +29,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
            
 
         $this->view->form = $this->_buildForm();
+        $this->view->translateform = $this->_buildTranslateForm();
 
         $paginationUrls = array();  
         $files = get_records('file', array('item_id'=>$itemId), 999);
@@ -64,9 +68,6 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
             throw new Exception('Request must be POST.');
         }
 
-        if (!($transcription)){
-            throw new Exception('transcription nonexistent');
-        }
 
         //get the record based on URL param
         $fileId = $this->getParam('file');
@@ -133,7 +134,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $fileLength = count($files);
 
         //use this variable to track the number of files that have been started
-        $numberStarted = 0;
+        $numberStarted = 1;
 
         //iterate through files, tracking the number started with $numberStarted.  
         foreach($files as $file){
@@ -199,6 +200,93 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         
        
     }
+
+
+
+
+
+
+
+
+     public function translateAction() 
+     {        
+
+        //get the posted transcription data       
+        $request = new Zend_Controller_Request_Http();
+        $translation = $request->getPost('translation');
+
+        
+        if (!$request->isPost()){
+            throw new Exception('Request must be POST.');
+        }
+
+
+        //get the record based on URL param
+        $fileId = $this->getParam('file');
+        $file = get_record_by_id('file', $fileId);
+
+    
+        //check if there was old translation data (this is used for analytics purposes)
+        $element = $file->getElementTexts('Scriptus', 'translation');
+        if(isset($element[0])) {
+            $firstElement = $element[0];
+        } else {
+            $element[0] = '';
+            $firstElement = $element[0];
+            $firstElement->text = '';
+        }; //getElementTexts returns array, element[0] is first element
+
+        //get collection name
+        $itemId = $this->getParam('item');
+        $fileId = $this->getParam('file');
+        $scriptus = new Scriptus($itemId, $fileId);
+        $collectionName = $scriptus->getCollectionTitle();
+        $itemName = $scriptus->getItemTitle();
+        $fileName = $scriptus->getFileTitle();
+
+
+        //Update file with new transcription information
+        $element = $file->getElement('Scriptus', 'translation');
+        $file->deleteElementTextsByElementId(array($element->id));
+        $file->addTextForElement($element, $translation, false);
+
+
+        $file->save();
+       
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //Get the most recent transcriptions from the database.  The view also makes a query to the Disqus API to get most recent comments
     public function dashboardAction(){
@@ -445,6 +533,8 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $this->form = new Omeka_Form;         
         $this->form->setMethod('post'); 
 
+        $this->form->setAttrib('id', 'transcribeform');
+
         $transcriptionArea = new Zend_Form_Element_Textarea('transcribebox');
 
         if ($user) {
@@ -485,6 +575,54 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         return $this->form;
     }
 
+    private function _buildTranslateForm() {
+
+        $user = current_user();
+        //create a new Omeka form
+        $this->form = new Omeka_Form;         
+        $this->form->setMethod('post');
+
+        $this->form->setAttrib('id', 'translateform');
+
+        $translationArea = new Zend_Form_Element_Textarea('translatebox');
+
+        if ($user) {
+            $translationArea  ->setRequired(true)       
+                            ->setValue($this->translation)
+                            ->setAttrib('class', 'col-xs-12')                                                     
+                            ->setAttrib('class', 'form-control');
+        } else {
+            $translationArea  ->setRequired(true)       
+                            ->setValue($this->translation)
+                            ->setAttrib('class', 'col-xs-12')
+                            ->setAttrib('readonly', 'true')                            
+                            ->setAttrib('class', 'form-control');
+            
+        }   
+                
+        $this->form->addElement($translationArea);
+
+        $save = new Zend_Form_Element_Submit('save');
+        $save ->setLabel('Save');
+        $save->setAttrib('class', 'btn btn-primary');
+        $save->setAttrib('data-loading-text', "Saving...");
+        $save->setAttrib('id', 'save-translation-button');
+
+        $login = new Zend_Form_Element_Submit('login');
+        $login ->setLabel('Sign in to transcribe');
+        $login->setAttrib('class', 'btn btn-danger');
+        $login->setAttrib('onclick', "window.location.href = 'http://diyhistory.lib.uiowa.edu/users/login';");
+        $login->setAttrib('id', 'save-translation-button');
+
+        if ($user) {
+            $this->form->addElement($save);
+        } else {
+            $this->form->addElement($login);
+            
+        }        
+
+        return $this->form;
+    }
+
 
 }
-

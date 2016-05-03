@@ -23,6 +23,11 @@ class Scriptus
     	return $this->imageUrl;
     }
 
+    public function getSmallerImageUrl() {
+        $this->smallerImageUrl = $this->file->getWebPath('fullsize');
+        return $this->smallerImageUrl;
+    }
+
     public function getImageThumbnail() {
         
         $this->thumbnailUrl = $this->file->getWebPath('square_thumbnail');
@@ -33,6 +38,16 @@ class Scriptus
     public function getTranscription() {
         $this->transcription = metadata($this->file, array('Scriptus', 'Transcription'));
     	return $this->transcription;
+    }
+
+    public function getTranslation() {
+        $this->translation = metadata($this->file, array('Scriptus', 'translation'));
+        return $this->translation;
+    }
+
+    public function getStatus() {
+        $this->status = metadata($this->file, array('Scriptus', 'Status'));
+        return $this->status;
     }
 
     public function getFileLink() {

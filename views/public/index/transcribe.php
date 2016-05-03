@@ -47,9 +47,10 @@
 </script>
 </head>
 
-	<body class="menu-push">	
+	<body class="menu-push">		
 
-		<img id="ImageID" src="<?php echo $this->imageUrl; ?>" alt=''/>	
+		<?php //show the small version for Scholarhsip because of TIFFS ?>
+		<img id="ImageID" src="<?php if ($this->collection_title == 'Scholarship at Iowa') {echo $this->smallerImageUrl;} else {echo $this->imageUrl;} ?>" alt=''/>	
 		
 		<nav class="menu menu-vertical menu-left" id="menu-s2">
 			<div class="ui-resizable-handle ui-resizable-e" id="egrip"></div>
@@ -59,6 +60,7 @@
 
 	   		<ul class="nav nav-tabs" role="tablist">
 	   		  <li class="active"><a href="#transcribe" role="tab" data-toggle="tab">Transcribe</a></li>
+	   		  <li id="translateTab"><a href="#translate" role="tab" data-toggle="tab">Translate</a></li>
 	   		  <li id="discussTab"><a href="#discuss" id="discussLink" role="tab" data-toggle="tab">Discuss</a></li>
 	   		</ul>
 
@@ -122,6 +124,15 @@
 					
 				</div>
 
+				<div data-toggle="tab" class="tab-pane" id="translate">
+					<?php 
+						echo $this->transcription;
+
+						echo $this->translateform;						
+					?>
+					
+				</div>
+
 			</div>
 		</nav>	
 
@@ -132,101 +143,132 @@
 		<script src="../../plugins/Scriptus/views/public/javascripts/classie.js"></script>
 		<script>
 
-			//Loads discuss tab if user navigated from recent comments page. discussOpen is the URL parameter used for this purpose
-			$(document).ready(function(){
-				var URL = document.URL;
-				var URLArray = URL.split("?");
-				if (URLArray){
-					var endOfURL = URLArray.pop();
-					if (endOfURL == 'discussOpen=true'){ 
-						$('.active').removeClass('active');
-						$('#discuss').addClass('active');
-						$('#discussTab').addClass('active');
-					}
+		$('#transcribeform').on('click', function(event) {
+			console.log("transcribe form");
+
+			// get the form data				
+			var formData = {
+				'transcription'	: $('#transcribebox').val()
+				//'checkbox' 		: isChecked
+			};
+
+			// process the form
+			$.ajax({
+				type 		: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+				url 		: '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(); ?>/save', // the url where we want to POST
+				data 		: formData, // our data object
+				dataType 	: 'json', // what type of data do we expect back from the server
+	            encode      : true
+			})
+
+			// using the done promise callback
+			.done(function(data) {}).fail(function(request, error) {});						
+
+			// stop the form from submitting the normal way and refreshing the page
+			event.preventDefault();
+		});
+			
+
+		$('#save-button').click(function(){
+		  var btn = $(this);
+		  
+		  btn.button("loading");
+		  btn.children().each(function(idx,ele){
+		    var icon = $(ele);
+		    icon.animate({},2000, 'linear', function() {
+		        icon.hide().fadeIn(300*idx).addClass('big');
+		     });
+		  });
+	  
+		  // perform login / async callback here
+		  doLogin(1000,function(){
+		  	btn.button("reset"); // reset button after login callback returns
+		  });	  
+		});
+
+
+		$('#translateform').on('click', function(event) {
+			console.log("translate form");
+				
+			// get the form data				
+			var formData = {
+				'translation'	: $('#translatebox').val()
+				//'checkbox' 		: isChecked
+			};
+
+			// process the form
+			$.ajax({
+				type 		: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+				url 		: '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(); ?>/translate', // the url where we want to POST
+				data 		: formData, // our data object
+				dataType 	: 'json', // what type of data do we expect back from the server
+	            encode      : true
+			})
+
+			// using the done promise callback
+			.done(function(data) {}).fail(function(request, error) {});						
+
+			// stop the form from submitting the normal way and refreshing the page
+			event.preventDefault();				
+		});
+
+		$('#save-translation-button').click(function(){
+		  var btn = $(this);
+		  
+		  btn.button("loading");
+		  btn.children().each(function(idx,ele){
+		    var icon = $(ele);
+		    icon.animate({},2000, 'linear', function() {
+		        icon.hide().fadeIn(300*idx).addClass('big');
+		     });
+		  });
+
+		  // perform login / async callback here
+		  doLogin(1000,function(){
+		  	btn.button("reset"); // reset button after login callback returns
+		  });
+		});
+
+
+
+
+
+
+
+		//Loads discuss tab if user navigated from recent comments page. discussOpen is the URL parameter used for this purpose
+		$(document).ready(function(){
+			var URL = document.URL;
+			var URLArray = URL.split("?");
+			if (URLArray){
+				var endOfURL = URLArray.pop();
+				if (endOfURL == 'discussOpen=true'){ 
+					$('.active').removeClass('active');
+					$('#discuss').addClass('active');
+					$('#discussTab').addClass('active');
 				}
-			});
+			}
+		});
+			
+				
+		$('#ImageID').smoothZoom({
+			width: '100%',
+			height: '100%',
+			responsive: true
+		});
 
-			jQuery(function($){
-				$('#ImageID').smoothZoom({
-					width: '100%',
-					height: '100%',
-					responsive: true
-				});
+		$('#menu-s2').resizable({
+		    handles: {'e': '#egrip'}
+		});
 
-				$('form').submit(function(event) {
-
-						// get the form data				
-						var formData = {
-							'transcription'	: $('#transcribebox').val()
-						};
-
-
-
-						// process the form
-						$.ajax({
-							type 		: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-							url 		: '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(); ?>/save', // the url where we want to POST
-							data 		: formData, // our data object
-							dataType 	: 'json', // what type of data do we expect back from the server
-				            encode          : true
-						})
-							// using the done promise callback
-							.done(function(data) {
-
-								//log data to the console so we can see
-								//console.log(data); 
-								//console.log("DONE HIT");
-
-								// here we will handle errors and validation messages
-							})
-							.fail(function(request, error) {
-								//console.log("FAIL HIT");
-								//console.log("ERROR IS:");
-								//console.log(error);
-								//console.log(request.responseText)
-							});
-
-							
-
-						// stop the form from submitting the normal way and refreshing the page
-						event.preventDefault();
-					});
-
-					
-
-					/* simulates async login activity */
-					var doLogin = function(ms,cb) {
-					  setTimeout(function() {
-					    if(typeof cb == 'function')
-					    cb();
-					  }, ms);
-					};
-
-					$('#save-button').click(function(){
-					  var btn = $(this);
-					  
-					  btn.button("loading");
-					  btn.children().each(function(idx,ele){
-					    var icon = $(ele);
-					    icon.animate({},2000, 'linear', function() {
-					        icon.hide().fadeIn(300*idx).addClass('big');
-					     });
-					  });
-					  
-					  // perform login / async callback here
-					  doLogin(3000,function(){
-					  	btn.button("reset"); // reset button after login callback returns
-					  });	  
-					})				
-			});			
-
-					
-			$('#menu-s2').resizable({
-			    handles: {			        
-			        'e': '#egrip',
-
-			    }
-			});
+		var status = <?php echo json_encode($this->status); ?>;
+		
+		/* simulates async login activity */
+		var doLogin = function(ms,cb) {
+		  setTimeout(function() {
+		    if(typeof cb == 'function')
+		    cb();
+		  }, ms);
+		};
 
 		</script>
 
