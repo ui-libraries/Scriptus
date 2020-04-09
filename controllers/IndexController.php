@@ -17,7 +17,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $this->translation = $scriptus->getTranslation();
 
         $this->view->imageUrl = $scriptus->getImageUrl();
-        $this->view->smallerImageUrl = $scriptus->getSmallerImageUrl();                            
+        $this->view->smallerImageUrl = $scriptus->getSmallerImageUrl();                          
         $this->view->file_title = $scriptus->getFileTitle();
         $this->view->item_title = $scriptus->getItemTitle();              
         $this->view->item_link = $scriptus->getItemLink();
@@ -141,7 +141,7 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
             if (isset($file)){
                 $status = $file->getElementTexts('Scriptus', 'Status');
                 $status = $status[0];
-                if (($status->text == 'Started') || ($status->text == 'Needs Review') || ($status->text == 'Completed')){
+                if ($status->text == 'Started') {
                     $numberStarted++;
                 }
             }
@@ -297,12 +297,12 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         if ($user){ 
             //Change this to prepared statement
             $username = $user->username; 
-            $sql = "select * from Scriptus_changes where username = ? order by time_changed DESC limit 3;";
+            $sql = "select * from Scriptus_changes where username = ? order by time_changed DESC;";
             $stmt = new Zend_Db_Statement_Mysqli($db, $sql); 
             $stmt->execute(array($username));
 
             //The number of user transcriptions that should be displayed
-            $numberOfDesiredUserTranscriptions = 3;
+            $numberOfDesiredUserTranscriptions = 999;
 
             //The number of user transcriptions that should be displayed
             $numberOfRetrievedUserTranscriptions = 0;
@@ -525,7 +525,6 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
         $this->view->collectionStats = $collectionArray;
     }
 
-
     private function _buildForm() {
 
         $user = current_user();
@@ -555,14 +554,14 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
 
         $save = new Zend_Form_Element_Submit('save');
         $save ->setLabel('Save');
-        $save->setAttrib('class', 'btn btn-primary');
+        $save->setAttrib('class', 'btn btn-primary save');
         $save->setAttrib('data-loading-text', "Saving...");
         $save->setAttrib('id', 'save-button');
 
         $login = new Zend_Form_Element_Submit('login');
-        $login ->setLabel('Sign in to transcribe');
-        $login->setAttrib('class', 'btn btn-danger');
-        $login->setAttrib('onclick', "window.location.href = 'http://diyhistory.lib.uiowa.edu/users/login';");
+        $login ->setLabel('Sign in');
+        $login->setAttrib('class', 'btn btn-danger login');
+        //$login->setAttrib('onclick', "window.location.href = 'https://diyhistory.lib.uiowa.edu/users/login';");
         $login->setAttrib('id', 'save-button');
 
         if ($user) {
@@ -596,22 +595,22 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
                             ->setValue($this->translation)
                             ->setAttrib('class', 'col-xs-12')
                             ->setAttrib('readonly', 'true')                            
-                            ->setAttrib('class', 'form-control');
-            
+                            ->setAttrib('class', 'form-control')
+                            ->setAttrib('id', 'translate-textarea');            
         }   
                 
         $this->form->addElement($translationArea);
 
         $save = new Zend_Form_Element_Submit('save');
         $save ->setLabel('Save');
-        $save->setAttrib('class', 'btn btn-primary');
+        $save->setAttrib('class', 'btn btn-primary save');
         $save->setAttrib('data-loading-text', "Saving...");
         $save->setAttrib('id', 'save-translation-button');
 
         $login = new Zend_Form_Element_Submit('login');
-        $login ->setLabel('Sign in to transcribe');
-        $login->setAttrib('class', 'btn btn-danger');
-        $login->setAttrib('onclick', "window.location.href = 'http://diyhistory.lib.uiowa.edu/users/login';");
+        $login ->setLabel('Sign in');
+        $login->setAttrib('class', 'btn btn-danger login');
+        //$login->setAttrib('onclick', "window.location.href = 'https://diyhistory.lib.uiowa.edu/users/login'");
         $login->setAttrib('id', 'save-translation-button');
 
         if ($user) {

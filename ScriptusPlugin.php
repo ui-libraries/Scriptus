@@ -147,6 +147,18 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
                     'action'       => 'submissionstats',
                 )
             )
+        );
+
+        $router->addRoute(
+            'confirm',
+            new Zend_Controller_Router_Route(
+                'confirm',
+                array(
+                    'module'       => 'scriptus',
+                    'controller'   => 'index',
+                    'action'       => 'confirm',
+                )
+            )
         ); 
 
         $router->addRoute(
