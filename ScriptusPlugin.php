@@ -126,7 +126,7 @@ class ScriptusPlugin extends Omeka_Plugin_AbstractPlugin
         );    
 
         $router->addRoute(
-            'dasboard',
+            'dashboard',
             new Zend_Controller_Router_Route(
                 'dashboard',
                 array(
